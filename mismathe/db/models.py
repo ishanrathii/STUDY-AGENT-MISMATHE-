@@ -4,7 +4,6 @@ from __future__ import annotations
 from datetime import datetime, date
 
 from sqlalchemy import (
-    BigInteger,
     Boolean,
     Date,
     DateTime,
@@ -29,8 +28,9 @@ class Student(Base):
     __tablename__ = "students"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    telegram_user_id: Mapped[int] = mapped_column(BigInteger, unique=True, index=True)
-    telegram_username: Mapped[str | None] = mapped_column(String(64))
+    # external_id: opaque per-browser identifier (cookie UUID). One student per browser.
+    external_id: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    display_handle: Mapped[str | None] = mapped_column(String(64))
     name: Mapped[str | None] = mapped_column(String(120))
 
     # Academic profile

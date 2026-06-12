@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MISMATHE — Your CET Mentor</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E🎯%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>MISMATHE</h1>
+      <p class="tag">Your AI mentor for MHT-CET &amp; life</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-label">Streak</span>
+        <span class="stat-value" id="streakValue">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Mode</span>
+        <span class="stat-value" id="modeValue">friend</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Quick actions</h3>
+      <button class="quick" data-action="today">🎯 Today's ONE thing</button>
+      <button class="quick" data-action="schedule">📅 Today's schedule</button>
+      <button class="quick" data-action="checkin">📝 Daily check-in</button>
+      <button class="quick" data-action="weak">⚠️ Weak areas</button>
+      <button class="quick" data-action="revise">📚 Quick revision</button>
+      <button class="quick" data-action="recover">🩹 Recovery plan</button>
+      <button class="quick" data-action="news">🌐 Updates</button>
+      <button class="quick" data-action="dashboard">📊 Dashboard</button>
+    </div>
+
+    <div class="section">
+      <h3>Study stopwatch</h3>
+      <div id="stopwatchPanel">
+        <input id="swSubject" placeholder="Subject (e.g. Physics)" />
+        <input id="swChapter" placeholder="Chapter (optional)" />
+        <button id="swStart" class="primary">▶️ Start</button>
+        <button id="swStop" class="danger hidden">⏹ Stop</button>
+        <div id="swActive" class="sw-active hidden"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Generate test</h3>
+      <select id="testSubject">
+        <option value="">Pick subject…</option>
+        <option>Physics</option>
+        <option>Chemistry</option>
+        <option>Mathematics</option>
+      </select>
+      <input id="testChapter" placeholder="Chapter (optional)" />
+      <select id="testDifficulty">
+        <option value="easy">Easy</option>
+        <option value="medium" selected>Medium</option>
+        <option value="hard">Hard</option>
+        <option value="cet">CET-level</option>
+      </select>
+      <button id="testGen" class="primary">⚙️ Generate</button>
+    </div>
+
+    <div class="section">
+      <h3>Mentor mode</h3>
+      <div id="modeGrid"></div>
+    </div>
+
+    <div class="section">
+      <button id="syncBtn">📤 Sync memory to GitHub</button>
+    </div>
+
+    <p class="footer">
+      Every chat is saved to <code>memory/</code> in the repo.<br/>
+      Powered by Claude · Built for you.
+    </p>
+  </aside>
+
+  <main class="chat">
+    <header class="chat-header">
+      <h2>Chat with MISMATHE</h2>
+      <span class="status" id="status">connecting…</span>
+    </header>
+    <div class="messages" id="messages"></div>
+    <form class="composer" id="composer">
+      <textarea id="input" placeholder="Talk to me — anything. Doubts, feelings, plans…" rows="2"></textarea>
+      <button type="submit" class="primary" id="sendBtn">Send</button>
+    </form>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

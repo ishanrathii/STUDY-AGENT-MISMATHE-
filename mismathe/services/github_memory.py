@@ -55,7 +55,9 @@ async def export_all() -> list[Path]:
         students = (await session.execute(select(Student))).scalars().all()
         for student in students:
             snapshot = await _snapshot_student(session, student)
-            path = MEMORY_DIR / f"student_{student.telegram_user_id}.json"
+            # Use first 12 chars of external_id for a short, stable filename
+            short = student.external_id[:12]
+            path = MEMORY_DIR / f"student_{short}.json"
             path.write_text(
                 json.dumps(snapshot, indent=2, ensure_ascii=False) + "\n",
                 encoding="utf-8",
@@ -115,10 +117,10 @@ async def _snapshot_student(session, student: Student) -> dict:
     )
 
     return {
-        "format_version": 1,
+        "format_version": 2,
         "exported_at": datetime.utcnow().isoformat(),
-        "telegram_user_id": student.telegram_user_id,
-        "telegram_username": student.telegram_username,
+        "external_id": student.external_id,
+        "display_handle": student.display_handle,
         "name": student.name,
         "profile": {
             "standard": student.standard,
@@ -266,9 +268,14 @@ async def restore_if_empty() -> int:
                 continue
 
             profile = data.get("profile", {})
+            # v1 snapshots used telegram_user_id; v2 uses external_id (cookie UUID).
+            external_id = data.get("external_id") or str(data.get("telegram_user_id", ""))
+            if not external_id:
+                logger.warning("Skipping snapshot %s — no external_id.", path.name)
+                continue
             student = Student(
-                telegram_user_id=data["telegram_user_id"],
-                telegram_username=data.get("telegram_username"),
+                external_id=external_id,
+                display_handle=data.get("display_handle") or data.get("telegram_username"),
                 name=data.get("name"),
                 standard=profile.get("standard", "11"),
                 current_percentage=profile.get("current_percentage"),
