@@ -16,6 +16,7 @@ from mismathe.core.modes import get_mode, list_modes
 from mismathe.db.database import get_session
 from mismathe.handlers.onboarding import start_onboarding
 from mismathe.services.analytics import render_dashboard
+from mismathe.services.github_memory import sync_to_github
 from mismathe.services.scheduler import touch_streak
 from mismathe.services.stopwatch import active_session, start_session, stop_active
 from mismathe.services.test_engine import generate_test
@@ -38,6 +39,8 @@ HELP_TEXT = """\
 /revise — spaced-repetition revision queue
 /mode — switch mentor mood (strict / calm / motivation / recovery / challenge / focus / friend)
 /dashboard — your stats: streak, hours, accuracy
+/sync — push my memory of you to GitHub now
+/myid — show your Telegram user id
 /recover — emergency 7-day recovery plan
 /news — academic + CET updates
 /puzzle — daily brain teaser
@@ -298,6 +301,30 @@ async def cmd_movie(update: Update, _ctx: ContextTypes.DEFAULT_TYPE) -> None:
     r = random_recommendation()
     await update.message.reply_text(
         f"🎬 *{r.title}* ({r.kind})\n\n_{r.why}_",
+        parse_mode=ParseMode.MARKDOWN,
+    )
+
+
+async def cmd_sync(update: Update, _ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    """Manually push memory snapshots to GitHub."""
+    assert update.message
+    await update.message.reply_text("📤 Syncing my memory of you to GitHub…")
+    ok = await sync_to_github()
+    if ok:
+        await update.message.reply_text("✅ Memory synced. Your progress is safe in the repo.")
+    else:
+        await update.message.reply_text(
+            "⚠️ Snapshots saved locally, but the GitHub push failed. "
+            "Check the bot machine's git remote / credentials."
+        )
+
+
+async def cmd_myid(update: Update, _ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    """Show the user's Telegram numeric id (for the ALLOWED_USER_IDS lock)."""
+    assert update.effective_user and update.message
+    await update.message.reply_text(
+        f"Your Telegram user id: `{update.effective_user.id}`\n\n"
+        "Put this in ALLOWED_USER_IDS in .env to lock the bot to just you.",
         parse_mode=ParseMode.MARKDOWN,
     )
 

@@ -13,6 +13,7 @@ from config import settings
 from mismathe.core.agent import respond_to_student
 from mismathe.db.database import get_session
 from mismathe.db.models import Student
+from mismathe.services.github_memory import sync_to_github
 
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,12 @@ def start_scheduler(application) -> AsyncIOScheduler:
         CronTrigger(hour=23, minute=30, timezone=tz),
         args=[application],
         id="streak_guard",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        _nightly_memory_sync,
+        CronTrigger(hour=23, minute=45, timezone=tz),
+        id="memory_sync",
         replace_existing=True,
     )
 
@@ -85,6 +92,14 @@ async def _evening_checkin_nudge(application) -> None:
             await bot.send_message(chat_id=student.telegram_user_id, text=text)
         except Exception as exc:  # noqa: BLE001
             logger.warning("Check-in nudge failed for %s: %s", student.telegram_user_id, exc)
+
+
+async def _nightly_memory_sync() -> None:
+    """Push memory snapshots to GitHub every night."""
+    try:
+        await sync_to_github()
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Nightly memory sync failed: %s", exc)
 
 
 async def _streak_guard(application) -> None:

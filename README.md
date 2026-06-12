@@ -70,19 +70,71 @@ mismathe/
 └── data/                      # SQLite DB (gitignored)
 ```
 
-## Setup
+## Setup — connecting the bot to YOUR Telegram
 
-1. Copy `.env.example` to `.env` and fill in:
-   - `TELEGRAM_BOT_TOKEN` — from @BotFather
-   - `ANTHROPIC_API_KEY` — from console.anthropic.com
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Run the bot:
-   ```bash
-   python main.py
-   ```
+### Step 1 — create your bot (2 minutes, inside Telegram)
+
+1. Open Telegram and search for **@BotFather** (the official bot, blue check).
+2. Send `/newbot`.
+3. Give it a display name — e.g. `MISMATHE`.
+4. Give it a username ending in `bot` — e.g. `mismathe_mentor_bot`.
+5. BotFather replies with a **token** like `7012345678:AAH9x...`. Copy it.
+
+That token is what binds this code to *your* bot. Anyone who messages
+`@mismathe_mentor_bot` reaches this program.
+
+### Step 2 — get a Claude API key
+
+1. Go to [console.anthropic.com](https://console.anthropic.com) → API Keys.
+2. Create a key and copy it.
+
+### Step 3 — run the bot
+
+On the machine that will run the bot (your laptop or a server):
+
+```bash
+git clone https://github.com/ishanrathii/STUDY-AGENT-MISMATHE-.git
+cd STUDY-AGENT-MISMATHE-
+cp .env.example .env
+# edit .env: paste TELEGRAM_BOT_TOKEN and ANTHROPIC_API_KEY
+pip install -r requirements.txt
+python main.py
+```
+
+### Step 4 — start chatting
+
+Open Telegram → search your bot's username → press **Start**.
+Onboarding begins immediately. That's it — you're connected.
+
+### Step 5 (recommended) — lock the bot to you
+
+Send `/myid` to the bot. It replies with your numeric Telegram id.
+Put it in `.env`:
+
+```
+ALLOWED_USER_IDS=123456789
+```
+
+Restart the bot. Now nobody else can use your mentor, even if they find it.
+
+> **Note:** the bot only replies while `python main.py` is running. For 24/7
+> availability run it on an always-on machine (a cheap VPS, Railway, Render,
+> Raspberry Pi, or an old laptop that stays on).
+
+## GitHub memory sync
+
+MISMATHE's working memory lives in SQLite (`data/mismathe.db`), but its
+long-term brain is **backed up into this repo**:
+
+- Every night at 23:45 (and on `/sync`), each student's profile, long-term
+  memories, weak areas, recent check-ins, and test history are exported to
+  `memory/student_<telegram_id>.json`, committed, and pushed.
+- On startup, if the database is empty but `memory/` snapshots exist (fresh
+  machine, fresh clone), the bot **restores** the profile, memories, and weak
+  areas automatically — so MISMATHE never forgets you, even across machines.
+
+Controlled by `GITHUB_MEMORY_SYNC` in `.env`. The machine running the bot
+needs push access to the repo (HTTPS token or SSH key configured in git).
 
 ## Commands
 
@@ -99,6 +151,8 @@ mismathe/
 | `/revise` | Spaced-repetition revision queue |
 | `/mode` | Switch mentor mood (strict / calm / motivation / recovery / challenge / focus / friend) |
 | `/dashboard` | Performance analytics — streaks, accuracy, productivity |
+| `/sync` | Push memory snapshots to GitHub immediately |
+| `/myid` | Show your Telegram user id (for the privacy lock) |
 | `/recover` | Emergency 7-day recovery plan |
 | `/news` | Latest MHT-CET / academic / tech updates |
 | `/puzzle` | Daily brain teaser |

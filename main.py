@@ -6,6 +6,7 @@ import logging
 
 from mismathe.bot import build_application
 from mismathe.db.database import init_db
+from mismathe.services.github_memory import restore_if_empty
 from mismathe.services.scheduler import start_scheduler
 
 
@@ -18,6 +19,9 @@ logger = logging.getLogger("mismathe")
 
 async def _startup(app) -> None:
     await init_db()
+    restored = await restore_if_empty()
+    if restored:
+        logger.info("Memory restored from GitHub snapshots for %s student(s).", restored)
     start_scheduler(app)
     logger.info("MISMATHE is online.")
 

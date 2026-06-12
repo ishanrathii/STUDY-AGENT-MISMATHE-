@@ -7,10 +7,12 @@ from telegram import Update
 from telegram.ext import (
     Application,
     ApplicationBuilder,
+    ApplicationHandlerStop,
     CallbackQueryHandler,
     CommandHandler,
     ContextTypes,
     MessageHandler,
+    TypeHandler,
     filters,
 )
 
@@ -20,6 +22,24 @@ from mismathe.handlers.chat import handle_message
 
 
 logger = logging.getLogger(__name__)
+
+
+async def _access_gate(update: Update, _ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    """Privacy lock — when ALLOWED_USER_IDS is set, reject everyone else."""
+    allowed = settings.allowed_user_ids
+    if not allowed:
+        return
+    user = update.effective_user
+    if user and user.id in allowed:
+        return
+    if update.effective_message:
+        try:
+            await update.effective_message.reply_text(
+                "This is a private mentor bot. Access is restricted."
+            )
+        except Exception:  # noqa: BLE001
+            pass
+    raise ApplicationHandlerStop
 
 
 async def _on_error(update: object, ctx: ContextTypes.DEFAULT_TYPE) -> None:
@@ -41,6 +61,9 @@ def build_application() -> Application:
         .build()
     )
 
+    # Group -1 runs before everything — enforces the ALLOWED_USER_IDS lock.
+    app.add_handler(TypeHandler(Update, _access_gate), group=-1)
+
     app.add_handler(CommandHandler("start", commands.cmd_start))
     app.add_handler(CommandHandler("help", commands.cmd_help))
     app.add_handler(CommandHandler("today", commands.cmd_today))
@@ -58,6 +81,8 @@ def build_application() -> Application:
     app.add_handler(CommandHandler("puzzle", commands.cmd_puzzle))
     app.add_handler(CommandHandler("movie", commands.cmd_movie))
     app.add_handler(CommandHandler("priority", commands.cmd_priority))
+    app.add_handler(CommandHandler("sync", commands.cmd_sync))
+    app.add_handler(CommandHandler("myid", commands.cmd_myid))
 
     app.add_handler(CallbackQueryHandler(commands.on_mode_callback, pattern=r"^mode:"))
     app.add_handler(CallbackQueryHandler(commands.on_test_callback, pattern=r"^test:"))

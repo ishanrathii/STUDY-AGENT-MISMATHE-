@@ -22,6 +22,19 @@ class Settings(BaseSettings):
     default_mode: str = Field("friend", alias="DEFAULT_MODE")
     admin_user_id: int | None = Field(None, alias="ADMIN_USER_ID")
 
+    # Privacy lock — comma-separated Telegram user ids allowed to use the bot.
+    # Empty = open to anyone who finds the bot.
+    allowed_user_ids_raw: str = Field("", alias="ALLOWED_USER_IDS")
+
+    # GitHub memory sync — export memory/ JSON snapshots and git push them.
+    github_memory_sync: bool = Field(True, alias="GITHUB_MEMORY_SYNC")
+    git_branch: str = Field("", alias="GIT_BRANCH")  # empty = current branch
+
+    @property
+    def allowed_user_ids(self) -> set[int]:
+        raw = self.allowed_user_ids_raw.replace(";", ",")
+        return {int(x) for x in (p.strip() for p in raw.split(",")) if x.isdigit()}
+
 
 settings = Settings()  # type: ignore[call-arg]
 
