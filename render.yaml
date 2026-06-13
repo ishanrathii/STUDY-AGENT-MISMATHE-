@@ -1,0 +1,25 @@
+# MISMATHE — one-click Render deploy
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: mismathe
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false   # set this in the Render dashboard — never commit it
+      - key: ANTHROPIC_MODEL
+        value: claude-opus-4-8
+      - key: SESSION_SECRET
+        generateValue: true   # Render auto-generates a random secret
+      - key: TIMEZONE
+        value: Asia/Kolkata
+      - key: DEFAULT_MODE
+        value: friend
+      - key: GITHUB_MEMORY_SYNC
+        value: "false"   # Render's filesystem is ephemeral on free tier;
+                         # enabling git push from inside the container would
+                         # need a GitHub token. Memory still works in-session.

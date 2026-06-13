@@ -1,0 +1,41 @@
+# MISMATHE — Fly.io deploy config
+# Run: fly launch --no-deploy --copy-config  (first time)
+#      fly secrets set ANTHROPIC_API_KEY=sk-...
+#      fly deploy
+app = "mismathe"
+primary_region = "bom"   # Mumbai — closest to MHT-CET aspirants in Maharashtra
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  ANTHROPIC_MODEL = "claude-opus-4-8"
+  TIMEZONE = "Asia/Kolkata"
+  DEFAULT_MODE = "friend"
+  GITHUB_MEMORY_SYNC = "false"
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.checks]
+    [http_service.checks.health]
+      grace_period = "10s"
+      interval = "30s"
+      method = "GET"
+      timeout = "5s"
+      path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
+# Persist SQLite + memory snapshots across deploys
+[mounts]
+  source = "mismathe_data"
+  destination = "/app/data"
