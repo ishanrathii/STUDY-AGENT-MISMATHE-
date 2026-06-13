@@ -87,6 +87,67 @@ mismathe/
 
 ---
 
+## Deploy to a live URL (pick one — all take 2-5 minutes)
+
+The repo ships with deploy configs for every major platform. Pick the one
+you already have an account on. **All of them need just ONE secret in the
+dashboard: `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com).**
+
+### Option A — Render (easiest, free tier)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/ishanrathii/STUDY-AGENT-MISMATHE-)
+
+1. Click the button above (or go to Render → New → Blueprint → connect repo)
+2. Render reads `render.yaml` and auto-configures everything
+3. Paste your `ANTHROPIC_API_KEY` when prompted
+4. Click Deploy — live URL in ~3 minutes
+
+> Free tier spins down after 15 min idle (cold start ~30s on first message).
+> Upgrade to Starter ($7/mo) for always-on.
+
+### Option B — NodeOps dashboard
+
+The web dashboard handles the build setup that the public API rejects on Python+Dockerfile combos:
+
+1. Go to **[app.nodeops.network](https://app.nodeops.network/projects)** → New Project
+2. Pick GitHub → `ishanrathii/STUDY-AGENT-MISMATHE-`
+3. Branch: `claude/cool-johnson-gha0ek` (until the PR is merged to main)
+4. Runtime: **Dockerfile** (NodeOps will detect the `Dockerfile` automatically)
+5. Port: `8000`
+6. Add env var `ANTHROPIC_API_KEY` = your key from console.anthropic.com
+7. Add env var `SESSION_SECRET` = any long random string
+8. Deploy
+
+### Option C — Fly.io (best for "always-on, low cost")
+
+```bash
+brew install flyctl  # or: curl -L https://fly.io/install.sh | sh
+fly auth login
+cd STUDY-AGENT-MISMATHE-
+fly launch --no-deploy --copy-config   # accepts the bundled fly.toml
+fly secrets set ANTHROPIC_API_KEY=sk-ant-... SESSION_SECRET=$(openssl rand -hex 32)
+fly deploy
+fly open                                # opens the live URL
+```
+
+### Option D — Railway
+
+1. Go to [railway.app/new](https://railway.app/new) → Deploy from GitHub
+2. Pick `STUDY-AGENT-MISMATHE-`, branch `claude/cool-johnson-gha0ek`
+3. Railway reads `railway.json` (Dockerfile build)
+4. Variables tab → add `ANTHROPIC_API_KEY` and `SESSION_SECRET`
+5. Deploy
+
+### What you get when it's live
+
+A public HTTPS URL like `https://mismathe.onrender.com` (or whichever
+platform). Open it on your phone or any browser — onboarding starts
+immediately. Every chat is logged to `memory/conversations/` in the repo
+(when `GITHUB_MEMORY_SYNC` is enabled and a GitHub token is configured —
+disabled by default on ephemeral-filesystem hosts).
+
+---
+
 ## Setup — running the website locally
 
 ### 1. Get a Claude API key
