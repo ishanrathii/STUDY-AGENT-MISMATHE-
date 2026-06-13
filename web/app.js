@@ -12,6 +12,7 @@ let state = {
   modes: [],
   mentorMode: 'friend',
   onboardingCompleted: false,
+  syllabus: { subjects: [], chapters: {}, priority: {} },
 };
 
 // ----- API helpers -----
@@ -75,13 +76,18 @@ function setStatus(text, cls = '') {
 async function loadState() {
   setStatus('connecting…');
   try {
-    const data = await api('/api/state');
+    const [data, syllabus] = await Promise.all([
+      api('/api/state'),
+      api('/api/syllabus'),
+    ]);
     state.modes = data.modes || [];
     state.mentorMode = data.mentor_mode;
     state.onboardingCompleted = data.onboarding_completed;
+    state.syllabus = syllabus;
     $('streakValue').textContent = data.streak_days ?? 0;
     $('modeValue').textContent = data.mentor_mode;
     renderModes();
+    renderSubjects();
     if (data.intro) {
       addMessage('assistant', data.intro);
     }
@@ -89,6 +95,35 @@ async function loadState() {
   } catch (err) {
     setStatus(`offline — ${err.message}`, 'error');
   }
+}
+
+function renderSubjects() {
+  const subjSel = $('testSubject');
+  const chapSel = $('testChapter');
+  subjSel.innerHTML = '<option value="">Pick subject…</option>';
+  state.syllabus.subjects.forEach((s) => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    subjSel.appendChild(opt);
+  });
+
+  const repopulateChapters = () => {
+    const subject = subjSel.value;
+    chapSel.innerHTML = '<option value="">Any chapter (mock)</option>';
+    if (!subject) return;
+    const chapters = state.syllabus.chapters[subject] || [];
+    const priority = new Set(state.syllabus.priority[subject] || []);
+    chapters.forEach((c) => {
+      const opt = document.createElement('option');
+      opt.value = c.name;
+      const star = priority.has(c.name) ? ' ⭐' : '';
+      opt.textContent = `${c.name} (${c.marks}/${c.marks_with_option})${star}`;
+      chapSel.appendChild(opt);
+    });
+  };
+
+  subjSel.addEventListener('change', repopulateChapters);
 }
 
 function renderModes() {
@@ -221,7 +256,7 @@ $('testGen').addEventListener('click', async () => {
     addMessage('assistant', 'Pick a subject first.');
     return;
   }
-  const chapter = $('testChapter').value.trim() || null;
+  const chapter = $('testChapter').value || null;
   const difficulty = $('testDifficulty').value;
   $('testGen').disabled = true;
   setStatus('generating…', 'busy');

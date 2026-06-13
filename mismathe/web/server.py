@@ -24,6 +24,7 @@ from itsdangerous import BadSignature, URLSafeSerializer
 from pydantic import BaseModel
 
 from config import ROOT, settings
+from mismathe.content.syllabus import CLASS_11_CHAPTERS, HIGH_PRIORITY_CHAPTERS, subjects
 from mismathe.core.agent import respond_to_student
 from mismathe.core.modes import get_mode, list_modes
 from mismathe.db.database import get_session, init_db
@@ -478,6 +479,20 @@ async def sync():
 @app.get("/api/health")
 async def health():
     return {"status": "ok", "service": "mismathe", "model": settings.anthropic_model}
+
+
+# ---------------------------------------------------------------------------
+# Syllabus
+# ---------------------------------------------------------------------------
+
+@app.get("/api/syllabus")
+async def syllabus():
+    """Return the full chapter list per subject with marks weightage."""
+    return {
+        "subjects": subjects(),
+        "chapters": CLASS_11_CHAPTERS,
+        "priority": HIGH_PRIORITY_CHAPTERS,
+    }
 
 
 # Friendly error JSON

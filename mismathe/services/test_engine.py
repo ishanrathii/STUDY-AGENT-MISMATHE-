@@ -4,6 +4,7 @@ Returns rendered question blocks; grading is handled by free-form chat.
 """
 from __future__ import annotations
 
+from mismathe.content.syllabus import syllabus_text
 from mismathe.core.agent import generate_with_prompt
 
 
@@ -13,8 +14,13 @@ You are MISMATHE's exam architect — a senior MHT-CET problem setter.
 Generate practice questions that match the MHT-CET pattern:
 - Single-correct MCQs with 4 options (A, B, C, D)
 - CET-level conceptual + numerical mix
+- Stay STRICTLY inside the chapter list below — never invent chapter names
+  or pull topics from outside this syllabus.
 - Cover the specified topic, subject, and difficulty
 - For each question, append the correct answer and a 1-2 line explanation
+
+STUDENT'S EXACT CLASS 11 SYLLABUS (Maharashtra Board STH):
+""" + syllabus_text() + """
 
 Format STRICTLY as:
 Q1. <question text>

@@ -1,6 +1,7 @@
 """System prompts — the SOUL of MISMATHE."""
 from __future__ import annotations
 
+from mismathe.content.syllabus import HIGH_PRIORITY_CHAPTERS, syllabus_text
 from mismathe.core.modes import get_mode
 
 
@@ -79,6 +80,32 @@ WHAT YOU NEVER DO
 """
 
 
+def _priority_summary() -> str:
+    """One-line-per-subject list of the highest-marks chapters — drives focus."""
+    lines: list[str] = []
+    for subject, chapters in HIGH_PRIORITY_CHAPTERS.items():
+        lines.append(f"{subject}: {', '.join(chapters)}")
+    return "\n".join(lines)
+
+
+# Pre-rendered static blocks (chapter list + priorities) — these are stable
+# across requests, so they benefit from prompt caching.
+SYLLABUS_BLOCK = (
+    "STUDENT'S EXACT SYLLABUS (Class 11, Maharashtra Board — STH)\n"
+    "These are the ONLY chapters that exist for this student. Never invent\n"
+    "chapter names; never suggest topics outside this list. Marks shown as\n"
+    "base/with-option — higher with-option = higher exam weightage.\n\n"
+    + syllabus_text()
+)
+
+PRIORITY_BLOCK = (
+    "HIGH-PRIORITY CHAPTERS (smart priority engine — sorted by exam weightage)\n"
+    "When planning schedules, choosing what to study today, or suggesting\n"
+    "weak-area focus, bias HEAVILY toward these — they give the most ROI.\n\n"
+    + _priority_summary()
+)
+
+
 def build_system_prompt(
     *,
     mode_key: str,
@@ -89,7 +116,16 @@ def build_system_prompt(
 ) -> str:
     """Assemble the live system prompt — core + mode voice + dynamic context."""
     mode = get_mode(mode_key)
-    sections: list[str] = [MISMATHE_CORE, "", f"CURRENT MENTOR MODE — {mode.label.upper()}", mode.voice]
+    sections: list[str] = [
+        MISMATHE_CORE,
+        "",
+        SYLLABUS_BLOCK,
+        "",
+        PRIORITY_BLOCK,
+        "",
+        f"CURRENT MENTOR MODE — {mode.label.upper()}",
+        mode.voice,
+    ]
 
     if student_profile:
         sections += ["", "STUDENT PROFILE", student_profile]
