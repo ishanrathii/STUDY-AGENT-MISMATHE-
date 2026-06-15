@@ -3,12 +3,12 @@ name: Deploy MISMATHE site to GitHub Pages
 # Publishes the static landing site in docs/ to GitHub Pages.
 # Runs on every push to main, and can be triggered manually.
 
+# NOTE: The simplest way to publish docs/ is GitHub's native "Deploy from a
+# branch" mode (Settings -> Pages -> Source: Deploy from a branch -> main -> /docs).
+# That requires no workflow at all. This workflow is kept as an optional
+# "GitHub Actions" deploy path and is manual-only so it doesn't create failed
+# runs when Pages is set to branch mode.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "docs/**"
-      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
