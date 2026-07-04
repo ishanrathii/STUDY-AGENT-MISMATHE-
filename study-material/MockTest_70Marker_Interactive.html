@@ -1,4 +1,4 @@
-<title>MISMATHE Quiz — PCM Mock 1</title>
+<title>MISMATHE Quiz — PCM 70-Marker</title>
 <style>
   :root {
     --bg:#eef1f7; --surface:#ffffff; --surface-2:#f7f9fc;
@@ -135,8 +135,8 @@
 
 <header>
   <div class="head-row">
-    <div class="brand"><span class="t">MISMATHE · Mock 1</span><span class="s">Class 11 · PCM · Chem + Phys + Maths</span></div>
-    <div class="chip timer"><span class="k">Time</span><span class="v tnum" id="timer">40:00</span></div>
+    <div class="brand"><span class="t">MISMATHE · 70-Marker</span><span class="s">Class 11 · PCM · 70 marks mixed</span></div>
+    <div class="chip timer"><span class="k">Time</span><span class="v tnum" id="timer">70:00</span></div>
     <div class="chip"><span class="k">Done</span><span class="v tnum" id="doneCount">0/30</span></div>
     <button id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">◑</button>
   </div>
@@ -172,40 +172,83 @@
 <script>
 (function(){
   "use strict";
-  var TITLE_MIN = 40; // minutes on the timer
+  var TITLE_MIN = 70; // minutes on the timer
   var SEC = { chem:{name:"Chemistry",cls:"sec-chem"}, phys:{name:"Physics",cls:"sec-phys"}, math:{name:"Mathematics",cls:"sec-math"} };
 
   var Q = [
-    {s:"chem",q:"The number of moles in 11 g of CO₂ (molar mass = 44 g/mol) is:",o:["0.25","0.5","1","0.025"],a:0,e:"n = mass / molar mass = 11 / 44 = 0.25 mol."},
-    {s:"chem",q:"The number of molecules present in 0.5 mole of O₂ is:",o:["6.022×10²³","3.011×10²³","1.2×10²⁴","3.011×10²²"],a:1,e:"molecules = 0.5 × 6.022×10²³ = 3.011×10²³.",mono:true},
-    {s:"chem",q:"Carbon forms CO and CO₂. For a fixed mass of carbon, the masses of oxygen are in ratio 1:2. This illustrates the law of:",o:["Conservation of mass","Definite proportions","Multiple proportions","Avogadro"],a:2,e:"Fixed mass of one element, the other in a simple whole-number ratio = Law of Multiple Proportions."},
-    {s:"chem",q:"The molarity of a solution containing 0.5 mol NaOH in 250 mL of solution is:",o:["1 M","2 M","0.5 M","4 M"],a:1,e:"M = moles / litres = 0.5 / 0.250 = 2 M."},
-    {s:"chem",q:"The molar mass of glucose (C₆H₁₂O₆) is:",o:["160 g/mol","172 g/mol","180 g/mol","200 g/mol"],a:2,e:"(12×6)+(1×12)+(16×6) = 72+12+96 = 180 g/mol."},
-    {s:"chem",q:"The number of significant figures in 0.00340 is:",o:["2","3","4","5"],a:1,e:"Leading zeros ignored; 3, 4 and trailing 0 count → 3 sig figs."},
-    {s:"chem",q:"“Equal volumes of all gases at the same temperature and pressure contain an equal number of molecules.” This is:",o:["Gay-Lussac’s law","Avogadro’s law","Dalton’s law","Boyle’s law"],a:1,e:"This is the definition of Avogadro’s law."},
-    {s:"chem",q:"The mass of 0.2 mole of water (H₂O, molar mass = 18 g/mol) is:",o:["1.8 g","3.6 g","18 g","9 g"],a:1,e:"mass = n × molar mass = 0.2 × 18 = 3.6 g."},
-    {s:"chem",q:"A compound has empirical formula CH₂ and molecular mass 42. Its molecular formula is:",o:["CH₂","C₂H₄","C₃H₆","C₄H₈"],a:2,e:"Empirical mass = 14; n = 42/14 = 3 → C₃H₆."},
-    {s:"chem",q:"The volume occupied by 1 mole of any gas at STP is:",o:["11.2 L","22.4 L","44.8 L","1 L"],a:1,e:"Molar volume of any gas at STP = 22.4 L."},
-    {s:"phys",q:"The dimensional formula of force is:",o:["[MLT⁻¹]","[MLT⁻²]","[ML²T⁻²]","[ML⁻¹T⁻²]"],a:1,e:"Force = mass × acceleration = [M][LT⁻²] = [MLT⁻²].",mono:true},
-    {s:"phys",q:"Which of the following is a fundamental (base) SI unit?",o:["newton","joule","kelvin","watt"],a:2,e:"kelvin is a base unit; newton, joule and watt are derived."},
-    {s:"phys",q:"The number of significant figures in 6.320×10³ is:",o:["2","3","4","5"],a:2,e:"6, 3, 2 and trailing 0 all count → 4 sig figs."},
-    {s:"phys",q:"The dimensional formula of work (or energy) is:",o:["[MLT⁻²]","[ML²T⁻²]","[ML²T⁻³]","[ML⁻¹T⁻²]"],a:1,e:"Work = force × distance = [MLT⁻²][L] = [ML²T⁻²].",mono:true},
-    {s:"phys",q:"The percentage errors in measuring A and B are 2% and 3%. The maximum percentage error in the product A×B is:",o:["1%","5%","6%","2.5%"],a:1,e:"For a product, percentage errors add: 2% + 3% = 5%."},
-    {s:"phys",q:"Which of the following quantities is dimensionless?",o:["velocity","strain","force","acceleration"],a:1,e:"Strain = change in length / original length → dimensionless."},
-    {s:"phys",q:"The dimensional formula of pressure is:",o:["[ML⁻¹T⁻²]","[MLT⁻²]","[ML²T⁻²]","[ML⁻²T⁻²]"],a:0,e:"Pressure = force / area = [MLT⁻²] / [L²] = [ML⁻¹T⁻²].",mono:true},
-    {s:"phys",q:"Which of the following is NOT a use of dimensional analysis?",o:["Checking correctness of an equation","Deriving a relation between quantities","Converting units between systems","Finding the value of dimensionless constants"],a:3,e:"Dimensional analysis cannot find dimensionless constants like 2 or π."},
-    {s:"phys",q:"The number of significant figures in 0.00580 is:",o:["2","3","4","5"],a:1,e:"Leading zeros ignored; 5, 8 and trailing 0 → 3 sig figs."},
-    {s:"phys",q:"The “accuracy” of a measurement refers to:",o:["closeness of repeated readings to each other","closeness of the measured value to the true value","the number of significant figures","the least count of the instrument"],a:1,e:"Accuracy = closeness to the true value. Precision = closeness of repeats to each other."},
-    {s:"math",q:"The value of sin 30° + cos 60° is:",o:["1","1/2","√3/2","0"],a:0,e:"sin30° + cos60° = ½ + ½ = 1.",mono:true},
-    {s:"math",q:"In which quadrant are both sin θ and cos θ negative?",o:["First","Second","Third","Fourth"],a:2,e:"In Quadrant III, sin and cos are both negative (only tan is positive)."},
-    {s:"math",q:"sin(−θ) is equal to:",o:["sin θ","−sin θ","cos θ","−cos θ"],a:1,e:"sin is an odd function → sin(−θ) = −sin θ.",mono:true},
-    {s:"math",q:"The value of tan 45° + cot 45° is:",o:["1","2","0","√2"],a:1,e:"tan45° + cot45° = 1 + 1 = 2.",mono:true},
-    {s:"math",q:"If sin θ = 3/5 and θ is acute, then cos θ equals:",o:["4/5","5/4","3/4","5/3"],a:0,e:"cosθ = √(1 − 9/25) = √(16/25) = 4/5.",mono:true},
-    {s:"math",q:"sin(90° + θ) is equal to:",o:["cos θ","−cos θ","sin θ","−sin θ"],a:0,e:"90°+θ lies in Q2 (sin +); 90° changes the function → +cos θ.",mono:true},
-    {s:"math",q:"The value of cos 120° is:",o:["1/2","−1/2","√3/2","−√3/2"],a:1,e:"cos120° = cos(180°−60°) = −cos60° = −½.",mono:true},
-    {s:"math",q:"The period of the function tan θ is:",o:["2π","π","π/2","4π"],a:1,e:"The period of tan (and cot) is π.",mono:true},
-    {s:"math",q:"1 + tan²θ is equal to:",o:["sec²θ","cosec²θ","cot²θ","1"],a:0,e:"Pythagorean identity: 1 + tan²θ = sec²θ.",mono:true},
-    {s:"math",q:"The value of sin 150° is:",o:["1/2","−1/2","√3/2","1"],a:0,e:"sin150° = sin(180°−30°) = +sin30° = ½.",mono:true}
+    // ================= CHEMISTRY — Some Basic Concepts (24) =================
+    {s:"chem",q:"The number of moles in 36 g of water (H₂O, molar mass = 18) is:",o:["1","2","3","0.5"],a:1,e:"n = 36/18 = 2 mol."},
+    {s:"chem",q:"The number of moles in 8 g of O₂ (molar mass = 32) is:",o:["0.25","0.5","1","0.125"],a:0,e:"n = 8/32 = 0.25 mol."},
+    {s:"chem",q:"The number of atoms in 1 mole of helium gas is:",o:["6.022×10²³","3.011×10²³","1.2×10²⁴","12.044×10²³"],a:0,e:"1 mole contains Avogadro's number = 6.022×10²³ atoms.",mono:true},
+    {s:"chem",q:"The molar mass of CaCO₃ (Ca=40, C=12, O=16) is:",o:["84","100","116","144"],a:1,e:"40 + 12 + (16×3) = 40+12+48 = 100 g/mol."},
+    {s:"chem",q:"The molar mass of H₂SO₄ is:",o:["98","80","114","90"],a:0,e:"(1×2)+32+(16×4) = 2+32+64 = 98 g/mol."},
+    {s:"chem",q:"The molarity of a solution with 4 g NaOH (molar mass 40) in 500 mL is:",o:["0.1 M","0.2 M","0.4 M","2 M"],a:1,e:"moles = 4/40 = 0.1; M = 0.1/0.5 = 0.2 M."},
+    {s:"chem",q:"The mass of 3 moles of CO₂ (molar mass 44) is:",o:["88 g","132 g","44 g","176 g"],a:1,e:"mass = 3 × 44 = 132 g."},
+    {s:"chem",q:"The number of molecules in 2 moles of N₂ is:",o:["6.022×10²³","1.204×10²⁴","3.011×10²³","2.4×10²⁴"],a:1,e:"2 × 6.022×10²³ = 1.204×10²⁴.",mono:true},
+    {s:"chem",q:"The percentage of oxygen (by mass) in water (H₂O) is about:",o:["11.1%","50%","88.9%","80%"],a:2,e:"(16/18) × 100 = 88.9%."},
+    {s:"chem",q:"The law of conservation of mass was given by:",o:["Proust","Dalton","Lavoisier","Avogadro"],a:2,e:"Antoine Lavoisier proposed the law of conservation of mass."},
+    {s:"chem",q:"The law of definite (constant) proportions was given by:",o:["Proust","Dalton","Gay-Lussac","Avogadro"],a:0,e:"Joseph Proust gave the law of definite proportions."},
+    {s:"chem",q:"The number of significant figures in 100.0 is:",o:["1","2","3","4"],a:3,e:"The decimal point makes the trailing zeros significant → 4."},
+    {s:"chem",q:"The number of significant figures in 0.0025 is:",o:["1","2","3","4"],a:1,e:"Leading zeros are not significant; only 2 and 5 count → 2."},
+    {s:"chem",q:"The empirical formula of glucose (C₆H₁₂O₆) is:",o:["CH₂O","CHO","C₂H₄O₂","CH₂"],a:0,e:"Divide all subscripts by 6 → CH₂O."},
+    {s:"chem",q:"The volume occupied by 2 moles of a gas at STP is:",o:["22.4 L","44.8 L","11.2 L","89.6 L"],a:1,e:"2 × 22.4 = 44.8 L."},
+    {s:"chem",q:"The molar mass of glucose (C₆H₁₂O₆) is:",o:["180 g/mol","160 g/mol","150 g/mol","200 g/mol"],a:0,e:"72 + 12 + 96 = 180 g/mol."},
+    {s:"chem",q:"One atomic mass unit (u) is defined as 1/12 the mass of one atom of:",o:["C-12","O-16","H-1","C-14"],a:0,e:"1 u = 1/12 the mass of a carbon-12 atom."},
+    {s:"chem",q:"A solution has 2 mol of solute in 1 kg of solvent. Its molality is:",o:["1 m","2 m","0.5 m","4 m"],a:1,e:"molality = mol solute / kg solvent = 2/1 = 2 m."},
+    {s:"chem",q:"Which of the following is a homogeneous mixture?",o:["air","sand + water","oil + water","chalk + water"],a:0,e:"Air is a uniform (homogeneous) mixture of gases."},
+    {s:"chem",q:"The number of moles in 5.6 L of a gas at STP is:",o:["0.25","0.5","1","0.1"],a:0,e:"n = 5.6 / 22.4 = 0.25 mol."},
+    {s:"chem",q:"The molar mass of NaCl (Na=23, Cl=35.5) is:",o:["58.5","53.5","60","44"],a:0,e:"23 + 35.5 = 58.5 g/mol."},
+    {s:"chem",q:"In a mixture of 2 mol A and 3 mol B, the mole fraction of A is:",o:["0.4","0.6","0.5","0.2"],a:0,e:"x_A = 2 / (2+3) = 0.4."},
+    {s:"chem",q:"Gay-Lussac's law of combining volumes applies to:",o:["masses of solids","volumes of reacting gases","densities of liquids","moles of solids"],a:1,e:"It relates volumes of reacting/product gases in simple whole-number ratios."},
+    {s:"chem",q:"The mass of 0.5 mole of CaCO₃ (molar mass 100) is:",o:["50 g","100 g","25 g","150 g"],a:0,e:"mass = 0.5 × 100 = 50 g."},
+    // ================= PHYSICS — Units & Measurements (23) =================
+    {s:"phys",q:"The dimensional formula of velocity is:",o:["[M⁰LT⁻¹]","[M⁰LT⁻²]","[MLT⁻¹]","[M⁰L²T⁻¹]"],a:0,e:"velocity = displacement/time = [L]/[T] = [M⁰LT⁻¹].",mono:true},
+    {s:"phys",q:"The SI base unit of length is the:",o:["metre","gram","litre","newton"],a:0,e:"The SI base unit of length is the metre (m)."},
+    {s:"phys",q:"The number of fundamental (base) SI units is:",o:["5","6","7","8"],a:2,e:"There are 7 SI base units."},
+    {s:"phys",q:"The dimensional formula of acceleration is:",o:["[M⁰LT⁻¹]","[M⁰LT⁻²]","[M⁰L²T⁻²]","[M⁰LT]"],a:1,e:"acceleration = velocity/time = [LT⁻¹]/[T] = [M⁰LT⁻²].",mono:true},
+    {s:"phys",q:"The dimensional formula of momentum is:",o:["[MLT⁻¹]","[MLT⁻²]","[ML²T⁻¹]","[ML⁻¹T]"],a:0,e:"momentum = mass × velocity = [M][LT⁻¹] = [MLT⁻¹].",mono:true},
+    {s:"phys",q:"The dimensional formula of power is:",o:["[ML²T⁻²]","[ML²T⁻³]","[MLT⁻²]","[MLT⁻³]"],a:1,e:"power = work/time = [ML²T⁻²]/[T] = [ML²T⁻³].",mono:true},
+    {s:"phys",q:"The SI unit of force is the:",o:["joule","newton","watt","pascal"],a:1,e:"Force is measured in newtons (N)."},
+    {s:"phys",q:"Which of the following quantities is dimensionless?",o:["density","relative density","force","pressure"],a:1,e:"Relative density is a ratio of two densities → dimensionless."},
+    {s:"phys",q:"The number of significant figures in 45.00 is:",o:["2","3","4","5"],a:2,e:"The decimal makes both trailing zeros significant → 4."},
+    {s:"phys",q:"The number of significant figures in 0.030400 is:",o:["3","4","5","6"],a:2,e:"Leading zeros ignored; 3,0,4,0,0 all count → 5."},
+    {s:"phys",q:"The principle of homogeneity of dimensions states that:",o:["only the LHS has dimensions","the dimensions of each term on both sides are equal","dimensions can be added to units","constants always have dimensions"],a:1,e:"Every term on both sides of a correct equation has the same dimensions."},
+    {s:"phys",q:"A light year is a unit of:",o:["time","distance","speed","energy"],a:1,e:"A light year is the distance light travels in one year."},
+    {s:"phys",q:"A parsec is a unit of:",o:["distance","time","angle","mass"],a:0,e:"Parsec is an astronomical unit of distance."},
+    {s:"phys",q:"The dimensional formula of frequency is:",o:["[T⁻¹]","[T]","[LT⁻¹]","[T⁻²]"],a:0,e:"frequency = 1/time = [T⁻¹].",mono:true},
+    {s:"phys",q:"If Z = A/B and the % errors in A and B are 1% and 2%, the maximum % error in Z is:",o:["1%","2%","3%","0.5%"],a:2,e:"For a quotient, percentage errors add: 1% + 2% = 3%."},
+    {s:"phys",q:"The dimensional formula of density is:",o:["[ML⁻³]","[ML⁻²]","[ML³]","[ML⁻¹]"],a:0,e:"density = mass/volume = [M]/[L³] = [ML⁻³].",mono:true},
+    {s:"phys",q:"Which error is reduced by taking a large number of readings?",o:["systematic error","random error","gross error","least-count error"],a:1,e:"Random errors are minimized by averaging many readings."},
+    {s:"phys",q:"In a measured value, the last recorded digit is:",o:["exact","certain","uncertain (doubtful)","always zero"],a:2,e:"The last significant digit of any measurement is uncertain/estimated."},
+    {s:"phys",q:"The SI base unit of temperature is the:",o:["celsius","kelvin","fahrenheit","joule"],a:1,e:"The SI base unit of temperature is the kelvin (K)."},
+    {s:"phys",q:"1 nanometre is equal to:",o:["10⁻⁶ m","10⁻⁹ m","10⁻¹² m","10⁻³ m"],a:1,e:"nano = 10⁻⁹, so 1 nm = 10⁻⁹ m.",mono:true},
+    {s:"phys",q:"The dimensional formula of work is:",o:["[MLT⁻²]","[ML²T⁻²]","[ML²T⁻³]","[MLT⁻¹]"],a:1,e:"work = force × distance = [MLT⁻²][L] = [ML²T⁻²].",mono:true},
+    {s:"phys",q:"Rounding 4.567 to three significant figures gives:",o:["4.56","4.57","4.60","4.5"],a:1,e:"The 4th digit (7) rounds the 6 up → 4.57."},
+    {s:"phys",q:"The number of significant figures in 2.0040 is:",o:["3","4","5","6"],a:2,e:"2,0,0,4,0 — all five digits count → 5."},
+    // ================= MATHS — Trigonometry-I (23) =================
+    {s:"math",q:"sin 90° =",o:["0","1","1/2","√3/2"],a:1,e:"sin 90° = 1.",mono:true},
+    {s:"math",q:"cos 0° =",o:["0","1","1/2","∞"],a:1,e:"cos 0° = 1.",mono:true},
+    {s:"math",q:"tan 60° =",o:["1","√3","1/√3","√3/2"],a:1,e:"tan 60° = √3.",mono:true},
+    {s:"math",q:"sin 45° =",o:["1/2","1/√2","√3/2","1"],a:1,e:"sin 45° = 1/√2.",mono:true},
+    {s:"math",q:"cos 30° =",o:["1/2","√3/2","1/√2","1"],a:1,e:"cos 30° = √3/2.",mono:true},
+    {s:"math",q:"cosec 30° =",o:["1","2","√2","1/2"],a:1,e:"cosec 30° = 1/sin30° = 1/(½) = 2.",mono:true},
+    {s:"math",q:"sec 60° =",o:["2","1","√2","2/√3"],a:0,e:"sec 60° = 1/cos60° = 1/(½) = 2.",mono:true},
+    {s:"math",q:"cot 45° =",o:["0","1","√3","∞"],a:1,e:"cot 45° = 1.",mono:true},
+    {s:"math",q:"sin²θ + cos²θ =",o:["0","1","2","sinθ·cosθ"],a:1,e:"Fundamental identity: sin²θ + cos²θ = 1.",mono:true},
+    {s:"math",q:"In the second quadrant, which functions are positive?",o:["sin and cosec","cos and sec","tan and cot","all of them"],a:0,e:"By ASTC, only sin and cosec are positive in Quadrant II."},
+    {s:"math",q:"cos(−θ) =",o:["cos θ","−cos θ","sin θ","−sin θ"],a:0,e:"cos is an even function → cos(−θ) = cos θ.",mono:true},
+    {s:"math",q:"The period of sin θ is:",o:["π","2π","π/2","4π"],a:1,e:"The period of sin (and cos) is 2π.",mono:true},
+    {s:"math",q:"The range of cos θ is:",o:["[−1, 1]","ℝ","[0, 1]","[0, ∞)"],a:0,e:"cos θ always lies between −1 and 1.",mono:true},
+    {s:"math",q:"sin(180° − θ) =",o:["sin θ","−sin θ","cos θ","−cos θ"],a:0,e:"180°−θ is in Q2 (sin +); function stays → +sin θ.",mono:true},
+    {s:"math",q:"cos(180° + θ) =",o:["cos θ","−cos θ","sin θ","−sin θ"],a:1,e:"180°+θ is in Q3 (cos −); function stays → −cos θ.",mono:true},
+    {s:"math",q:"tan(180° + θ) =",o:["tan θ","−tan θ","cot θ","−cot θ"],a:0,e:"180°+θ is in Q3 (tan +); function stays → +tan θ.",mono:true},
+    {s:"math",q:"sin 270° =",o:["1","−1","0","undefined"],a:1,e:"sin 270° = −1.",mono:true},
+    {s:"math",q:"cos 90° =",o:["0","1","−1","undefined"],a:0,e:"cos 90° = 0.",mono:true},
+    {s:"math",q:"The value of sin60°·cos30° + cos60°·sin30° is:",o:["0","1","1/2","√3/2"],a:1,e:"= sin(60°+30°) = sin90° = 1.",mono:true},
+    {s:"math",q:"1 + cot²θ =",o:["sec²θ","cosec²θ","tan²θ","1"],a:1,e:"Pythagorean identity: 1 + cot²θ = cosec²θ.",mono:true},
+    {s:"math",q:"If cos θ = 12/13 and θ is acute, then sin θ =",o:["5/13","13/5","12/5","5/12"],a:0,e:"sin θ = √(1 − 144/169) = √(25/169) = 5/13.",mono:true},
+    {s:"math",q:"cosec θ is undefined at θ =",o:["0°","30°","45°","90°"],a:0,e:"cosec θ = 1/sin θ; undefined where sin θ = 0, i.e. at 0°.",mono:true},
+    {s:"math",q:"sec 0° =",o:["0","1","∞","−1"],a:1,e:"sec 0° = 1/cos0° = 1/1 = 1.",mono:true}
   ];
 
   runQuiz(Q, TITLE_MIN);
