@@ -1,0 +1,172 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MISMATHE//Month Plan//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:MISMATHE Month Plan (5 Jul - 5 Aug)
+X-WR-TIMEZONE:Asia/Kolkata
+BEGIN:VTIMEZONE
+TZID:Asia/Kolkata
+BEGIN:STANDARD
+DTSTART:19700101T000000
+TZOFFSETFROM:+0530
+TZOFFSETTO:+0530
+TZNAME:IST
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:ex-daily@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260706T071500
+DTEND;TZID=Asia/Kolkata:20260706T075500
+SUMMARY:🏋️ EXERCISE (uncompromising)
+RRULE:FREQ=DAILY;UNTIL=20260805T182959Z
+DESCRIPTION:Run / cycle / skipping / bodyweight circuit / sport - 30+ min.\nScales when sick (15-min walk + 10 pushups + 1-min plank). NEVER cancels.\nBefore phone, before books. First win of the day.
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT10M
+DESCRIPTION:🏋️ EXERCISE (uncompromising)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:recap-daily@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260705T214500
+DTEND;TZID=Asia/Kolkata:20260705T220000
+SUMMARY:📲 Daily Recap → MISMATHE
+RRULE:FREQ=DAILY;UNTIL=20260805T182959Z
+DESCRIPTION:5 lines to MISMATHE:\n1) Exercise done/scaled\n2) What I studied (blocks + topics)\n3) 3 learnings (1 line each)\n4) 1 confusion\n5) Focus /10 · Energy /10 · Hours\n\nTONIGHT (5 Jul) = TEST DEBRIEF: pattern, per-subject feel, hardest questions, nerves.
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT5M
+DESCRIPTION:📲 Daily Recap → MISMATHE
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b1@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260706T093000
+DTEND;TZID=Asia/Kolkata:20260706T110000
+SUMMARY:📘 Deep Block 1 — day's focus chapter (CORE)
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH,FR,SA;UNTIL=20260804T182959Z
+DESCRIPTION:New chapter theory + solved examples. Phone in another room.\nWeek theme decides subject - see MISMATHE month plan.
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT10M
+DESCRIPTION:📘 Deep Block 1 — day's focus chapter (CORE)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b2@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260706T111500
+DTEND;TZID=Asia/Kolkata:20260706T121500
+SUMMARY:✍️ Block 2 — practice MCQs (CORE)
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH,FR,SA;UNTIL=20260804T182959Z
+DESCRIPTION:20-25 MCQs/numericals on Block 1 topic. Star every doubt for tonight's recap.
+END:VEVENT
+BEGIN:VEVENT
+UID:b3@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260706T143000
+DTEND;TZID=Asia/Kolkata:20260706T152000
+SUMMARY:🔁 Block 3 — Maths keep-sharp + spaced revision (FLEX)
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH,FR,SA;UNTIL=20260804T182959Z
+DESCRIPTION:25 min maths practice + 25 min revising yesterday's and last week's formulas.\nDroppable on a bad day - CORE blocks are not.
+END:VEVENT
+BEGIN:VEVENT
+UID:vedantu@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260706T160000
+DTEND;TZID=Asia/Kolkata:20260706T193000
+SUMMARY:🏫 Vedantu Coaching
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH,FR,SA;UNTIL=20260804T182959Z
+DESCRIPTION:Note every topic covered - tomorrow's Block 1 syncs to it (coaching-sync rule).
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT30M
+DESCRIPTION:🏫 Vedantu Coaching
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b4@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260706T210000
+DTEND;TZID=Asia/Kolkata:20260706T214500
+SUMMARY:📖 Block 4 — coaching recap (CORE)
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH,FR,SA;UNTIL=20260804T182959Z
+DESCRIPTION:Re-solve today's coaching examples from scratch. This is where coaching sticks.
+END:VEVENT
+BEGIN:VEVENT
+UID:wed-am@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260708T093000
+DTEND;TZID=Asia/Kolkata:20260708T121500
+SUMMARY:🧹 Wednesday — backlog + weak-area drills
+RRULE:FREQ=WEEKLY;BYDAY=WE;UNTIL=20260729T182959Z
+DESCRIPTION:9:30-11:00 backlog block (unfinished practice, starred doubts)\n11:15-12:15 weak-area drill from MISMATHE (Chem/Phys bias). No new content today.
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT10M
+DESCRIPTION:🧹 Wednesday — backlog + weak-area drills
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:wed-pm@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260708T143000
+DTEND;TZID=Asia/Kolkata:20260708T160000
+SUMMARY:📚 Wednesday — full-week revision
+RRULE:FREQ=WEEKLY;BYDAY=WE;UNTIL=20260729T182959Z
+DESCRIPTION:All 3 formula sheets aloud + redo the week's starred questions. Evening = FREE.
+END:VEVENT
+BEGIN:VEVENT
+UID:sun-mock@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260712T090000
+DTEND;TZID=Asia/Kolkata:20260712T104500
+SUMMARY:📝 WEEKLY MOCK — 9 AM sharp
+RRULE:FREQ=WEEKLY;BYDAY=SU;UNTIL=20260726T182959Z
+DESCRIPTION:MISMATHE mock on the week's chapters. Timed, closed book, phone away.\nSame hour as real tests - training the body clock.
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT30M
+DESCRIPTION:📝 WEEKLY MOCK — 9 AM sharp
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:sun-review@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260712T110000
+DTEND;TZID=Asia/Kolkata:20260712T120000
+SUMMARY:🔍 Mock post-mortem
+RRULE:FREQ=WEEKLY;BYDAY=SU;UNTIL=20260726T182959Z
+DESCRIPTION:Check answers. Tag every miss: concept / formula / silly. 2:30 pm patch session on what it exposed. Evening FREE.
+END:VEVENT
+BEGIN:VEVENT
+UID:megamock@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260802T090000
+DTEND;TZID=Asia/Kolkata:20260802T104500
+SUMMARY:🏆 MONTH MEGA-MOCK (100-marker + percentile)
+DESCRIPTION:Everything covered since 5 July. The month's report card. 11:00 review after.
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT60M
+DESCRIPTION:🏆 MONTH MEGA-MOCK (100-marker + percentile)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:monthreview@mismathe
+DTSTAMP:20260705T110000Z
+DTSTART;TZID=Asia/Kolkata:20260805T100000
+DTEND;TZID=Asia/Kolkata:20260805T113000
+SUMMARY:📊 Month Review with MISMATHE + build August plan
+DESCRIPTION:What moved, what didn't - August plan built from real data.
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT15M
+DESCRIPTION:📊 Month Review with MISMATHE + build August plan
+END:VALARM
+END:VEVENT
+END:VCALENDAR
