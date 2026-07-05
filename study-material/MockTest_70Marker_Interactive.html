@@ -1,0 +1,372 @@
+<title>MISMATHE Quiz — PCM 70-Marker</title>
+<style>
+  :root {
+    --bg:#eef1f7; --surface:#ffffff; --surface-2:#f7f9fc;
+    --ink:#0f172a; --muted:#64748b; --line:#dbe2ec;
+    --chem:#1f3a93; --phys:#0e7490; --math:#6d28d9;
+    --sel:#4f46e5; --sel-bg:#eef2ff;
+    --good:#16a34a; --good-bg:#dcfce7;
+    --bad:#dc2626; --bad-bg:#fee2e2;
+    --brand:#4f46e5; --brand-ink:#ffffff;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0b1120; --surface:#131a2b; --surface-2:#0f1626;
+      --ink:#e6ebf5; --muted:#94a3b8; --line:#263149;
+      --chem:#7d97ff; --phys:#2cc0d4; --math:#a78bfa;
+      --sel:#818cf8; --sel-bg:#1c2647;
+      --good:#4ade80; --good-bg:#12321d;
+      --bad:#f87171; --bad-bg:#3a1618;
+      --brand:#6366f1; --brand-ink:#ffffff;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#eef1f7; --surface:#ffffff; --surface-2:#f7f9fc;
+    --ink:#0f172a; --muted:#64748b; --line:#dbe2ec;
+    --chem:#1f3a93; --phys:#0e7490; --math:#6d28d9;
+    --sel:#4f46e5; --sel-bg:#eef2ff;
+    --good:#16a34a; --good-bg:#dcfce7; --bad:#dc2626; --bad-bg:#fee2e2;
+    --brand:#4f46e5; --brand-ink:#ffffff;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg:#0b1120; --surface:#131a2b; --surface-2:#0f1626;
+    --ink:#e6ebf5; --muted:#94a3b8; --line:#263149;
+    --chem:#7d97ff; --phys:#2cc0d4; --math:#a78bfa;
+    --sel:#818cf8; --sel-bg:#1c2647;
+    --good:#4ade80; --good-bg:#12321d; --bad:#f87171; --bad-bg:#3a1618;
+    --brand:#6366f1; --brand-ink:#ffffff;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg); color:var(--ink);
+    line-height:1.5; font-size:16px; padding-bottom:96px;
+  }
+  .mono { font-family:Georgia,"Cambria Math",serif; }
+  .tnum { font-variant-numeric:tabular-nums; }
+
+  header {
+    position:sticky; top:0; z-index:20;
+    background:color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  }
+  .head-row { max-width:760px; margin:0 auto; padding:11px 16px; display:flex; align-items:center; gap:12px; }
+  .brand { display:flex; flex-direction:column; gap:1px; margin-right:auto; min-width:0; }
+  .brand .t { font-weight:800; letter-spacing:.4px; font-size:16px; }
+  .brand .s { font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chip { display:flex; flex-direction:column; align-items:center; padding:4px 10px; border-radius:10px; background:var(--surface-2); border:1px solid var(--line); min-width:62px; }
+  .chip .k { font-size:9px; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); }
+  .chip .v { font-weight:800; font-size:16px; }
+  .chip.timer .v.warn { color:#d97706; }
+  .chip.timer .v.crit { color:var(--bad); }
+  #themeBtn { border:1px solid var(--line); background:var(--surface-2); color:var(--ink); width:38px; height:38px; border-radius:10px; cursor:pointer; font-size:16px; display:grid; place-items:center; }
+  .progress { height:4px; background:var(--line); }
+  .progress .bar { height:100%; width:0; background:var(--brand); transition:width .3s ease; }
+
+  main { max-width:760px; margin:0 auto; padding:16px; }
+  .intro { color:var(--muted); font-size:13.5px; margin:2px 4px 14px; }
+
+  .sec-head { display:flex; align-items:center; gap:9px; margin:22px 4px 12px; padding-bottom:8px; border-bottom:2px solid var(--sec); }
+  .sec-head .dot { width:11px; height:11px; border-radius:3px; background:var(--sec); }
+  .sec-head h2 { font-size:15px; letter-spacing:.3px; }
+  .sec-head .rng { margin-left:auto; font-size:11px; color:var(--muted); }
+  .sec-chem { --sec:var(--chem); } .sec-phys { --sec:var(--phys); } .sec-math { --sec:var(--math); }
+
+  .card { background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--sec); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px 15px 13px; margin-bottom:12px; }
+  .qhead { display:flex; gap:8px; margin-bottom:11px; }
+  .qnum { flex:0 0 auto; font-weight:800; font-size:12.5px; color:var(--sec); background:var(--surface-2); border:1px solid var(--line); border-radius:7px; padding:2px 7px; height:fit-content; }
+  .qtext { font-weight:600; font-size:15px; }
+
+  .opts { display:flex; flex-direction:column; gap:8px; }
+  .opt { display:flex; align-items:center; gap:11px; border:1.5px solid var(--line); border-radius:11px; padding:11px 13px; cursor:pointer; user-select:none; background:var(--surface); transition:border-color .12s, background .12s; min-height:46px; }
+  .opt:hover { border-color:var(--sel); }
+  .opt input { position:absolute; opacity:0; pointer-events:none; }
+  .opt .box { flex:0 0 auto; width:26px; height:26px; border-radius:8px; border:1.5px solid var(--line); background:var(--surface-2); display:grid; place-items:center; font-weight:800; font-size:13px; color:var(--muted); transition:all .12s; }
+  .opt .lbl { font-size:14.5px; }
+  .opt:focus-within { outline:2px solid var(--sel); outline-offset:2px; }
+  .opt.picked { border-color:var(--sel); background:var(--sel-bg); }
+  .opt.picked .box { background:var(--sel); border-color:var(--sel); color:#fff; }
+  .graded .opt { cursor:default; }
+  .graded .opt:hover { border-color:var(--line); }
+  .opt.correct { border-color:var(--good); background:var(--good-bg); }
+  .opt.correct .box { background:var(--good); border-color:var(--good); color:#fff; }
+  .opt.wrong { border-color:var(--bad); background:var(--bad-bg); }
+  .opt.wrong .box { background:var(--bad); border-color:var(--bad); color:#fff; }
+  .opt .mark { margin-left:auto; font-weight:800; font-size:13px; }
+  .opt.correct .mark { color:var(--good); } .opt.wrong .mark { color:var(--bad); }
+
+  .expl { margin-top:10px; font-size:13px; color:var(--ink); background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:9px 11px; display:none; }
+  .expl.show { display:block; } .expl b { color:var(--good); }
+
+  .results { display:none; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; margin-bottom:20px; scroll-margin-top:80px; }
+  .results.show { display:block; }
+  .score-big { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+  .score-big .n { font-size:42px; font-weight:800; line-height:1; }
+  .score-big .d { font-size:20px; color:var(--muted); font-weight:700; }
+  .score-big .pct { font-size:30px; font-weight:800; margin-left:6px; padding:2px 12px; border-radius:12px; background:var(--sel-bg); color:var(--sel); }
+  .score-big .pct.great { background:var(--good-bg); color:var(--good); }
+  .score-big .pct.work { background:var(--bad-bg); color:var(--bad); }
+  .score-big .verdict { margin-left:auto; font-weight:800; font-size:14px; padding:5px 12px; border-radius:999px; }
+  .v-great { background:var(--good-bg); color:var(--good); } .v-solid { background:var(--sel-bg); color:var(--sel); } .v-work { background:var(--bad-bg); color:var(--bad); }
+  .breakdown { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+  .bd { background:var(--surface-2); border:1px solid var(--line); border-top:3px solid var(--sec); border-radius:11px; padding:11px 12px; }
+  .bd .name { font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); }
+  .bd .val { font-size:22px; font-weight:800; margin-top:2px; }
+  .msg { margin-top:14px; font-size:13.5px; color:var(--muted); } .msg b { color:var(--ink); }
+
+  .bottom { position:fixed; left:0; right:0; bottom:0; z-index:20; background:color-mix(in srgb, var(--surface) 90%, transparent); backdrop-filter:blur(10px); border-top:1px solid var(--line); padding:11px 16px calc(11px + env(safe-area-inset-bottom)); }
+  .bottom-in { max-width:760px; margin:0 auto; display:flex; gap:10px; align-items:center; }
+  .count { font-size:13px; color:var(--muted); margin-right:auto; } .count b { color:var(--ink); }
+  button.action { border:none; border-radius:12px; padding:13px 22px; font-size:15px; font-weight:800; cursor:pointer; background:var(--brand); color:var(--brand-ink); transition:opacity .12s, transform .05s; }
+  button.action:active { transform:translateY(1px); }
+  button.action:disabled { opacity:.5; cursor:not-allowed; }
+  button.ghost { background:var(--surface-2); color:var(--ink); border:1px solid var(--line); }
+
+  @media (max-width:520px){ .breakdown { grid-template-columns:1fr 1fr 1fr; gap:7px; } .bd { padding:9px 8px; } .bd .val { font-size:18px; } .brand .s { display:none; } }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+
+<header>
+  <div class="head-row">
+    <div class="brand"><span class="t">MISMATHE · 70-Marker</span><span class="s">Class 11 · PCM · 70 marks mixed</span></div>
+    <div class="chip timer"><span class="k">Time</span><span class="v tnum" id="timer">70:00</span></div>
+    <div class="chip"><span class="k">Done</span><span class="v tnum" id="doneCount">0/30</span></div>
+    <button id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">◑</button>
+  </div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+</header>
+
+<main>
+  <p class="intro" id="intro"></p>
+  <div class="results" id="results" aria-live="polite">
+    <div class="score-big">
+      <span class="n tnum" id="scoreN">0</span><span class="d" id="scoreD">/ 30</span>
+      <span class="pct tnum" id="scorePct">0%</span>
+      <span class="verdict" id="verdict"></span>
+    </div>
+    <div class="breakdown">
+      <div class="bd sec-chem"><div class="name">Chemistry</div><div class="val tnum" id="bdChem">0/10</div></div>
+      <div class="bd sec-phys"><div class="name">Physics</div><div class="val tnum" id="bdPhys">0/10</div></div>
+      <div class="bd sec-math"><div class="name">Maths</div><div class="val tnum" id="bdMath">0/10</div></div>
+    </div>
+    <p class="msg" id="resultMsg"></p>
+  </div>
+  <div id="quiz"></div>
+</main>
+
+<div class="bottom">
+  <div class="bottom-in">
+    <span class="count" id="count"><b>0</b>/30 answered</span>
+    <button class="action ghost" id="resetBtn" style="display:none">Retake</button>
+    <button class="action" id="checkBtn">Check Answers</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var TITLE_MIN = 70; // minutes on the timer
+  var SEC = { chem:{name:"Chemistry",cls:"sec-chem"}, phys:{name:"Physics",cls:"sec-phys"}, math:{name:"Mathematics",cls:"sec-math"} };
+
+  var Q = [
+    // ================= CHEMISTRY — Some Basic Concepts (24) =================
+    {s:"chem",q:"The number of moles in 36 g of water (H₂O, molar mass = 18) is:",o:["1","2","3","0.5"],a:1,e:"n = 36/18 = 2 mol."},
+    {s:"chem",q:"The number of moles in 8 g of O₂ (molar mass = 32) is:",o:["0.25","0.5","1","0.125"],a:0,e:"n = 8/32 = 0.25 mol."},
+    {s:"chem",q:"The number of atoms in 1 mole of helium gas is:",o:["6.022×10²³","3.011×10²³","1.2×10²⁴","12.044×10²³"],a:0,e:"1 mole contains Avogadro's number = 6.022×10²³ atoms.",mono:true},
+    {s:"chem",q:"The molar mass of CaCO₃ (Ca=40, C=12, O=16) is:",o:["84","100","116","144"],a:1,e:"40 + 12 + (16×3) = 40+12+48 = 100 g/mol."},
+    {s:"chem",q:"The molar mass of H₂SO₄ is:",o:["98","80","114","90"],a:0,e:"(1×2)+32+(16×4) = 2+32+64 = 98 g/mol."},
+    {s:"chem",q:"The molarity of a solution with 4 g NaOH (molar mass 40) in 500 mL is:",o:["0.1 M","0.2 M","0.4 M","2 M"],a:1,e:"moles = 4/40 = 0.1; M = 0.1/0.5 = 0.2 M."},
+    {s:"chem",q:"The mass of 3 moles of CO₂ (molar mass 44) is:",o:["88 g","132 g","44 g","176 g"],a:1,e:"mass = 3 × 44 = 132 g."},
+    {s:"chem",q:"The number of molecules in 2 moles of N₂ is:",o:["6.022×10²³","1.204×10²⁴","3.011×10²³","2.4×10²⁴"],a:1,e:"2 × 6.022×10²³ = 1.204×10²⁴.",mono:true},
+    {s:"chem",q:"The percentage of oxygen (by mass) in water (H₂O) is about:",o:["11.1%","50%","88.9%","80%"],a:2,e:"(16/18) × 100 = 88.9%."},
+    {s:"chem",q:"The law of conservation of mass was given by:",o:["Proust","Dalton","Lavoisier","Avogadro"],a:2,e:"Antoine Lavoisier proposed the law of conservation of mass."},
+    {s:"chem",q:"The law of definite (constant) proportions was given by:",o:["Proust","Dalton","Gay-Lussac","Avogadro"],a:0,e:"Joseph Proust gave the law of definite proportions."},
+    {s:"chem",q:"The number of significant figures in 100.0 is:",o:["1","2","3","4"],a:3,e:"The decimal point makes the trailing zeros significant → 4."},
+    {s:"chem",q:"The number of significant figures in 0.0025 is:",o:["1","2","3","4"],a:1,e:"Leading zeros are not significant; only 2 and 5 count → 2."},
+    {s:"chem",q:"The empirical formula of glucose (C₆H₁₂O₆) is:",o:["CH₂O","CHO","C₂H₄O₂","CH₂"],a:0,e:"Divide all subscripts by 6 → CH₂O."},
+    {s:"chem",q:"The volume occupied by 2 moles of a gas at STP is:",o:["22.4 L","44.8 L","11.2 L","89.6 L"],a:1,e:"2 × 22.4 = 44.8 L."},
+    {s:"chem",q:"The molar mass of glucose (C₆H₁₂O₆) is:",o:["180 g/mol","160 g/mol","150 g/mol","200 g/mol"],a:0,e:"72 + 12 + 96 = 180 g/mol."},
+    {s:"chem",q:"One atomic mass unit (u) is defined as 1/12 the mass of one atom of:",o:["C-12","O-16","H-1","C-14"],a:0,e:"1 u = 1/12 the mass of a carbon-12 atom."},
+    {s:"chem",q:"A solution has 2 mol of solute in 1 kg of solvent. Its molality is:",o:["1 m","2 m","0.5 m","4 m"],a:1,e:"molality = mol solute / kg solvent = 2/1 = 2 m."},
+    {s:"chem",q:"Which of the following is a homogeneous mixture?",o:["air","sand + water","oil + water","chalk + water"],a:0,e:"Air is a uniform (homogeneous) mixture of gases."},
+    {s:"chem",q:"The number of moles in 5.6 L of a gas at STP is:",o:["0.25","0.5","1","0.1"],a:0,e:"n = 5.6 / 22.4 = 0.25 mol."},
+    {s:"chem",q:"The molar mass of NaCl (Na=23, Cl=35.5) is:",o:["58.5","53.5","60","44"],a:0,e:"23 + 35.5 = 58.5 g/mol."},
+    {s:"chem",q:"In a mixture of 2 mol A and 3 mol B, the mole fraction of A is:",o:["0.4","0.6","0.5","0.2"],a:0,e:"x_A = 2 / (2+3) = 0.4."},
+    {s:"chem",q:"Gay-Lussac's law of combining volumes applies to:",o:["masses of solids","volumes of reacting gases","densities of liquids","moles of solids"],a:1,e:"It relates volumes of reacting/product gases in simple whole-number ratios."},
+    {s:"chem",q:"The mass of 0.5 mole of CaCO₃ (molar mass 100) is:",o:["50 g","100 g","25 g","150 g"],a:0,e:"mass = 0.5 × 100 = 50 g."},
+    // ================= PHYSICS — Units & Measurements (23) =================
+    {s:"phys",q:"The dimensional formula of velocity is:",o:["[M⁰LT⁻¹]","[M⁰LT⁻²]","[MLT⁻¹]","[M⁰L²T⁻¹]"],a:0,e:"velocity = displacement/time = [L]/[T] = [M⁰LT⁻¹].",mono:true},
+    {s:"phys",q:"The SI base unit of length is the:",o:["metre","gram","litre","newton"],a:0,e:"The SI base unit of length is the metre (m)."},
+    {s:"phys",q:"The number of fundamental (base) SI units is:",o:["5","6","7","8"],a:2,e:"There are 7 SI base units."},
+    {s:"phys",q:"The dimensional formula of acceleration is:",o:["[M⁰LT⁻¹]","[M⁰LT⁻²]","[M⁰L²T⁻²]","[M⁰LT]"],a:1,e:"acceleration = velocity/time = [LT⁻¹]/[T] = [M⁰LT⁻²].",mono:true},
+    {s:"phys",q:"The dimensional formula of momentum is:",o:["[MLT⁻¹]","[MLT⁻²]","[ML²T⁻¹]","[ML⁻¹T]"],a:0,e:"momentum = mass × velocity = [M][LT⁻¹] = [MLT⁻¹].",mono:true},
+    {s:"phys",q:"The dimensional formula of power is:",o:["[ML²T⁻²]","[ML²T⁻³]","[MLT⁻²]","[MLT⁻³]"],a:1,e:"power = work/time = [ML²T⁻²]/[T] = [ML²T⁻³].",mono:true},
+    {s:"phys",q:"The SI unit of force is the:",o:["joule","newton","watt","pascal"],a:1,e:"Force is measured in newtons (N)."},
+    {s:"phys",q:"Which of the following quantities is dimensionless?",o:["density","relative density","force","pressure"],a:1,e:"Relative density is a ratio of two densities → dimensionless."},
+    {s:"phys",q:"The number of significant figures in 45.00 is:",o:["2","3","4","5"],a:2,e:"The decimal makes both trailing zeros significant → 4."},
+    {s:"phys",q:"The number of significant figures in 0.030400 is:",o:["3","4","5","6"],a:2,e:"Leading zeros ignored; 3,0,4,0,0 all count → 5."},
+    {s:"phys",q:"The principle of homogeneity of dimensions states that:",o:["only the LHS has dimensions","the dimensions of each term on both sides are equal","dimensions can be added to units","constants always have dimensions"],a:1,e:"Every term on both sides of a correct equation has the same dimensions."},
+    {s:"phys",q:"A light year is a unit of:",o:["time","distance","speed","energy"],a:1,e:"A light year is the distance light travels in one year."},
+    {s:"phys",q:"A parsec is a unit of:",o:["distance","time","angle","mass"],a:0,e:"Parsec is an astronomical unit of distance."},
+    {s:"phys",q:"The dimensional formula of frequency is:",o:["[T⁻¹]","[T]","[LT⁻¹]","[T⁻²]"],a:0,e:"frequency = 1/time = [T⁻¹].",mono:true},
+    {s:"phys",q:"If Z = A/B and the % errors in A and B are 1% and 2%, the maximum % error in Z is:",o:["1%","2%","3%","0.5%"],a:2,e:"For a quotient, percentage errors add: 1% + 2% = 3%."},
+    {s:"phys",q:"The dimensional formula of density is:",o:["[ML⁻³]","[ML⁻²]","[ML³]","[ML⁻¹]"],a:0,e:"density = mass/volume = [M]/[L³] = [ML⁻³].",mono:true},
+    {s:"phys",q:"Which error is reduced by taking a large number of readings?",o:["systematic error","random error","gross error","least-count error"],a:1,e:"Random errors are minimized by averaging many readings."},
+    {s:"phys",q:"In a measured value, the last recorded digit is:",o:["exact","certain","uncertain (doubtful)","always zero"],a:2,e:"The last significant digit of any measurement is uncertain/estimated."},
+    {s:"phys",q:"The SI base unit of temperature is the:",o:["celsius","kelvin","fahrenheit","joule"],a:1,e:"The SI base unit of temperature is the kelvin (K)."},
+    {s:"phys",q:"1 nanometre is equal to:",o:["10⁻⁶ m","10⁻⁹ m","10⁻¹² m","10⁻³ m"],a:1,e:"nano = 10⁻⁹, so 1 nm = 10⁻⁹ m.",mono:true},
+    {s:"phys",q:"The dimensional formula of work is:",o:["[MLT⁻²]","[ML²T⁻²]","[ML²T⁻³]","[MLT⁻¹]"],a:1,e:"work = force × distance = [MLT⁻²][L] = [ML²T⁻²].",mono:true},
+    {s:"phys",q:"Rounding 4.567 to three significant figures gives:",o:["4.56","4.57","4.60","4.5"],a:1,e:"The 4th digit (7) rounds the 6 up → 4.57."},
+    {s:"phys",q:"The number of significant figures in 2.0040 is:",o:["3","4","5","6"],a:2,e:"2,0,0,4,0 — all five digits count → 5."},
+    // ================= MATHS — Trigonometry-I (23) =================
+    {s:"math",q:"sin 90° =",o:["0","1","1/2","√3/2"],a:1,e:"sin 90° = 1.",mono:true},
+    {s:"math",q:"cos 0° =",o:["0","1","1/2","∞"],a:1,e:"cos 0° = 1.",mono:true},
+    {s:"math",q:"tan 60° =",o:["1","√3","1/√3","√3/2"],a:1,e:"tan 60° = √3.",mono:true},
+    {s:"math",q:"sin 45° =",o:["1/2","1/√2","√3/2","1"],a:1,e:"sin 45° = 1/√2.",mono:true},
+    {s:"math",q:"cos 30° =",o:["1/2","√3/2","1/√2","1"],a:1,e:"cos 30° = √3/2.",mono:true},
+    {s:"math",q:"cosec 30° =",o:["1","2","√2","1/2"],a:1,e:"cosec 30° = 1/sin30° = 1/(½) = 2.",mono:true},
+    {s:"math",q:"sec 60° =",o:["2","1","√2","2/√3"],a:0,e:"sec 60° = 1/cos60° = 1/(½) = 2.",mono:true},
+    {s:"math",q:"cot 45° =",o:["0","1","√3","∞"],a:1,e:"cot 45° = 1.",mono:true},
+    {s:"math",q:"sin²θ + cos²θ =",o:["0","1","2","sinθ·cosθ"],a:1,e:"Fundamental identity: sin²θ + cos²θ = 1.",mono:true},
+    {s:"math",q:"In the second quadrant, which functions are positive?",o:["sin and cosec","cos and sec","tan and cot","all of them"],a:0,e:"By ASTC, only sin and cosec are positive in Quadrant II."},
+    {s:"math",q:"cos(−θ) =",o:["cos θ","−cos θ","sin θ","−sin θ"],a:0,e:"cos is an even function → cos(−θ) = cos θ.",mono:true},
+    {s:"math",q:"The period of sin θ is:",o:["π","2π","π/2","4π"],a:1,e:"The period of sin (and cos) is 2π.",mono:true},
+    {s:"math",q:"The range of cos θ is:",o:["[−1, 1]","ℝ","[0, 1]","[0, ∞)"],a:0,e:"cos θ always lies between −1 and 1.",mono:true},
+    {s:"math",q:"sin(180° − θ) =",o:["sin θ","−sin θ","cos θ","−cos θ"],a:0,e:"180°−θ is in Q2 (sin +); function stays → +sin θ.",mono:true},
+    {s:"math",q:"cos(180° + θ) =",o:["cos θ","−cos θ","sin θ","−sin θ"],a:1,e:"180°+θ is in Q3 (cos −); function stays → −cos θ.",mono:true},
+    {s:"math",q:"tan(180° + θ) =",o:["tan θ","−tan θ","cot θ","−cot θ"],a:0,e:"180°+θ is in Q3 (tan +); function stays → +tan θ.",mono:true},
+    {s:"math",q:"sin 270° =",o:["1","−1","0","undefined"],a:1,e:"sin 270° = −1.",mono:true},
+    {s:"math",q:"cos 90° =",o:["0","1","−1","undefined"],a:0,e:"cos 90° = 0.",mono:true},
+    {s:"math",q:"The value of sin60°·cos30° + cos60°·sin30° is:",o:["0","1","1/2","√3/2"],a:1,e:"= sin(60°+30°) = sin90° = 1.",mono:true},
+    {s:"math",q:"1 + cot²θ =",o:["sec²θ","cosec²θ","tan²θ","1"],a:1,e:"Pythagorean identity: 1 + cot²θ = cosec²θ.",mono:true},
+    {s:"math",q:"If cos θ = 12/13 and θ is acute, then sin θ =",o:["5/13","13/5","12/5","5/12"],a:0,e:"sin θ = √(1 − 144/169) = √(25/169) = 5/13.",mono:true},
+    {s:"math",q:"cosec θ is undefined at θ =",o:["0°","30°","45°","90°"],a:0,e:"cosec θ = 1/sin θ; undefined where sin θ = 0, i.e. at 0°.",mono:true},
+    {s:"math",q:"sec 0° =",o:["0","1","∞","−1"],a:1,e:"sec 0° = 1/cos0° = 1/1 = 1.",mono:true}
+  ];
+
+  runQuiz(Q, TITLE_MIN);
+
+  function runQuiz(Q, minutes){
+    var LET=["A","B","C","D"];
+    var TOTAL=Q.length;
+    var picks=new Array(TOTAL).fill(-1);
+    var graded=false;
+    var quizEl=document.getElementById("quiz");
+    var secTotals={chem:0,phys:0,math:0};
+    Q.forEach(function(q){ secTotals[q.s]++; });
+
+    document.getElementById("intro").innerHTML = TOTAL+" single-correct questions · "+minutes+" minutes · +1 mark each, no negative marking. Tap an option to select — change it anytime before you check. When done, hit <b>Check Answers</b> at the bottom.";
+    document.getElementById("doneCount").textContent = "0/"+TOTAL;
+    document.getElementById("scoreD").textContent = "/ "+TOTAL;
+    document.getElementById("count").innerHTML = "<b>0</b>/"+TOTAL+" answered";
+    document.getElementById("bdChem").textContent = "0/"+secTotals.chem;
+    document.getElementById("bdPhys").textContent = "0/"+secTotals.phys;
+    document.getElementById("bdMath").textContent = "0/"+secTotals.math;
+
+    ["chem","phys","math"].forEach(function(secKey){
+      var idxs=Q.map(function(q,i){return q.s===secKey?i:-1;}).filter(function(i){return i>=0;});
+      if(!idxs.length) return;
+      var sh=document.createElement("div");
+      sh.className="sec-head "+SEC[secKey].cls;
+      sh.innerHTML='<span class="dot"></span><h2>'+SEC[secKey].name+'</h2><span class="rng">Q'+(idxs[0]+1)+'–Q'+(idxs[idxs.length-1]+1)+' · '+idxs.length+' marks</span>';
+      quizEl.appendChild(sh);
+      idxs.forEach(function(i){
+        var q=Q[i];
+        var card=document.createElement("div");
+        card.className="card "+SEC[secKey].cls; card.id="card"+i;
+        var head='<div class="qhead"><span class="qnum">Q'+(i+1)+'</span><span class="qtext">'+q.q+'</span></div>';
+        var opts='<div class="opts" role="radiogroup" aria-label="Question '+(i+1)+'">';
+        for(var j=0;j<4;j++){
+          opts+='<label class="opt" data-q="'+i+'" data-o="'+j+'"><span class="box">'+LET[j]+'</span><span class="lbl'+(q.mono?' mono':'')+'">'+q.o[j]+'</span><input type="radio" name="q'+i+'" value="'+j+'"></label>';
+        }
+        opts+='</div>';
+        card.innerHTML=head+opts+'<div class="expl" id="expl'+i+'"></div>';
+        quizEl.appendChild(card);
+      });
+    });
+
+    quizEl.addEventListener("change",function(ev){
+      if(graded) return;
+      var inp=ev.target; if(inp.tagName!=="INPUT") return;
+      var lbl=inp.closest(".opt"); var qi=+lbl.getAttribute("data-q");
+      picks[qi]=+lbl.getAttribute("data-o");
+      lbl.parentElement.querySelectorAll(".opt").forEach(function(el){el.classList.remove("picked");});
+      lbl.classList.add("picked"); updateCount();
+    });
+
+    function answered(){ return picks.filter(function(p){return p>=0;}).length; }
+    function updateCount(){
+      var n=answered();
+      document.getElementById("count").innerHTML="<b>"+n+"</b>/"+TOTAL+" answered";
+      document.getElementById("doneCount").textContent=n+"/"+TOTAL;
+      document.getElementById("bar").style.width=(n/TOTAL*100)+"%";
+    }
+
+    var checkBtn=document.getElementById("checkBtn"), resetBtn=document.getElementById("resetBtn");
+    checkBtn.addEventListener("click",grade);
+    resetBtn.addEventListener("click",function(){ location.reload(); });
+
+    function grade(){
+      if(graded) return; graded=true; stopTimer();
+      var score=0, per={chem:0,phys:0,math:0};
+      Q.forEach(function(q,i){
+        var card=document.getElementById("card"+i);
+        card.querySelector(".opts").classList.add("graded"); card.classList.add("graded");
+        var pick=picks[i];
+        card.querySelectorAll(".opt").forEach(function(lbl,j){
+          lbl.classList.remove("picked"); lbl.querySelector("input").disabled=true;
+          if(j===q.a){ lbl.classList.add("correct"); lbl.insertAdjacentHTML("beforeend",'<span class="mark">✓ correct</span>'); }
+          else if(j===pick){ lbl.classList.add("wrong"); lbl.insertAdjacentHTML("beforeend",'<span class="mark">✗ your pick</span>'); }
+        });
+        if(pick===q.a){ score++; per[q.s]++; }
+        var ex=document.getElementById("expl"+i);
+        var head=pick===q.a?"<b>Correct.</b> ":(pick<0?"Not answered. ":"Not quite. ");
+        ex.innerHTML=head+q.e; ex.classList.add("show");
+      });
+      showResults(score,per);
+    }
+
+    function showResults(score,per){
+      var pct=Math.round(score/TOTAL*100);
+      document.getElementById("scoreN").textContent=score;
+      var pctEl=document.getElementById("scorePct");
+      pctEl.textContent=pct+"%";
+      pctEl.classList.toggle("great",pct>=80); pctEl.classList.toggle("work",pct<60);
+      document.getElementById("bdChem").textContent=per.chem+"/"+secTotals.chem;
+      document.getElementById("bdPhys").textContent=per.phys+"/"+secTotals.phys;
+      document.getElementById("bdMath").textContent=per.math+"/"+secTotals.math;
+      var v=document.getElementById("verdict"), msg=document.getElementById("resultMsg");
+      if(pct>=80){ v.textContent="Excellent"; v.className="verdict v-great"; msg.innerHTML="<b>Strong — "+pct+"%.</b> You’re test-ready on these chapters. Skim the few you missed and lock them in."; }
+      else if(pct>=60){ v.textContent="Solid"; v.className="verdict v-solid"; msg.innerHTML="<b>Good base — "+pct+"%.</b> Fix the red ones, re-glance the formula sheet, and you’ll push past 80%."; }
+      else { v.textContent="Keep going"; v.className="verdict v-work"; msg.innerHTML="<b>No shame — "+pct+"% is data, not identity.</b> The red answers below are exactly what to revise. Retake tomorrow and watch it jump."; }
+      var wrong=[]; Q.forEach(function(q,i){ if(picks[i]!==q.a) wrong.push("Q"+(i+1)); });
+      if(wrong.length) msg.innerHTML+="<br>Review: <b>"+wrong.join(", ")+"</b>. Scroll down — each is marked with the right answer + why.";
+      var r=document.getElementById("results"); r.classList.add("show");
+      checkBtn.textContent="Checked ✓"; checkBtn.disabled=true; resetBtn.style.display="";
+      document.getElementById("count").innerHTML="Scored <b>"+score+"</b>/"+TOTAL+" ("+pct+"%)";
+      r.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+
+    // Timer
+    var remaining=minutes*60, tEl=document.getElementById("timer");
+    var timerId=setInterval(function(){ remaining--; if(remaining<=0){ remaining=0; render(); stopTimer(); if(!graded) grade(); return; } render(); },1000);
+    function render(){ var m=Math.floor(remaining/60),s=remaining%60; tEl.textContent=m+":"+(s<10?"0":"")+s; tEl.classList.toggle("warn",remaining<=300&&remaining>60); tEl.classList.toggle("crit",remaining<=60); }
+    function stopTimer(){ clearInterval(timerId); }
+    render(); updateCount();
+  }
+
+  var tb=document.getElementById("themeBtn");
+  tb.addEventListener("click",function(){
+    var root=document.documentElement, cur=root.getAttribute("data-theme");
+    if(!cur){ cur=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light"; }
+    root.setAttribute("data-theme",cur==="dark"?"light":"dark");
+  });
+})();
+</script>

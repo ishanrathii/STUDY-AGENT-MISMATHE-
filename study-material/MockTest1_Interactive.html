@@ -1,0 +1,329 @@
+<title>MISMATHE Quiz — PCM Mock 1</title>
+<style>
+  :root {
+    --bg:#eef1f7; --surface:#ffffff; --surface-2:#f7f9fc;
+    --ink:#0f172a; --muted:#64748b; --line:#dbe2ec;
+    --chem:#1f3a93; --phys:#0e7490; --math:#6d28d9;
+    --sel:#4f46e5; --sel-bg:#eef2ff;
+    --good:#16a34a; --good-bg:#dcfce7;
+    --bad:#dc2626; --bad-bg:#fee2e2;
+    --brand:#4f46e5; --brand-ink:#ffffff;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0b1120; --surface:#131a2b; --surface-2:#0f1626;
+      --ink:#e6ebf5; --muted:#94a3b8; --line:#263149;
+      --chem:#7d97ff; --phys:#2cc0d4; --math:#a78bfa;
+      --sel:#818cf8; --sel-bg:#1c2647;
+      --good:#4ade80; --good-bg:#12321d;
+      --bad:#f87171; --bad-bg:#3a1618;
+      --brand:#6366f1; --brand-ink:#ffffff;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#eef1f7; --surface:#ffffff; --surface-2:#f7f9fc;
+    --ink:#0f172a; --muted:#64748b; --line:#dbe2ec;
+    --chem:#1f3a93; --phys:#0e7490; --math:#6d28d9;
+    --sel:#4f46e5; --sel-bg:#eef2ff;
+    --good:#16a34a; --good-bg:#dcfce7; --bad:#dc2626; --bad-bg:#fee2e2;
+    --brand:#4f46e5; --brand-ink:#ffffff;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg:#0b1120; --surface:#131a2b; --surface-2:#0f1626;
+    --ink:#e6ebf5; --muted:#94a3b8; --line:#263149;
+    --chem:#7d97ff; --phys:#2cc0d4; --math:#a78bfa;
+    --sel:#818cf8; --sel-bg:#1c2647;
+    --good:#4ade80; --good-bg:#12321d; --bad:#f87171; --bad-bg:#3a1618;
+    --brand:#6366f1; --brand-ink:#ffffff;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg); color:var(--ink);
+    line-height:1.5; font-size:16px; padding-bottom:96px;
+  }
+  .mono { font-family:Georgia,"Cambria Math",serif; }
+  .tnum { font-variant-numeric:tabular-nums; }
+
+  header {
+    position:sticky; top:0; z-index:20;
+    background:color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  }
+  .head-row { max-width:760px; margin:0 auto; padding:11px 16px; display:flex; align-items:center; gap:12px; }
+  .brand { display:flex; flex-direction:column; gap:1px; margin-right:auto; min-width:0; }
+  .brand .t { font-weight:800; letter-spacing:.4px; font-size:16px; }
+  .brand .s { font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chip { display:flex; flex-direction:column; align-items:center; padding:4px 10px; border-radius:10px; background:var(--surface-2); border:1px solid var(--line); min-width:62px; }
+  .chip .k { font-size:9px; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); }
+  .chip .v { font-weight:800; font-size:16px; }
+  .chip.timer .v.warn { color:#d97706; }
+  .chip.timer .v.crit { color:var(--bad); }
+  #themeBtn { border:1px solid var(--line); background:var(--surface-2); color:var(--ink); width:38px; height:38px; border-radius:10px; cursor:pointer; font-size:16px; display:grid; place-items:center; }
+  .progress { height:4px; background:var(--line); }
+  .progress .bar { height:100%; width:0; background:var(--brand); transition:width .3s ease; }
+
+  main { max-width:760px; margin:0 auto; padding:16px; }
+  .intro { color:var(--muted); font-size:13.5px; margin:2px 4px 14px; }
+
+  .sec-head { display:flex; align-items:center; gap:9px; margin:22px 4px 12px; padding-bottom:8px; border-bottom:2px solid var(--sec); }
+  .sec-head .dot { width:11px; height:11px; border-radius:3px; background:var(--sec); }
+  .sec-head h2 { font-size:15px; letter-spacing:.3px; }
+  .sec-head .rng { margin-left:auto; font-size:11px; color:var(--muted); }
+  .sec-chem { --sec:var(--chem); } .sec-phys { --sec:var(--phys); } .sec-math { --sec:var(--math); }
+
+  .card { background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--sec); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px 15px 13px; margin-bottom:12px; }
+  .qhead { display:flex; gap:8px; margin-bottom:11px; }
+  .qnum { flex:0 0 auto; font-weight:800; font-size:12.5px; color:var(--sec); background:var(--surface-2); border:1px solid var(--line); border-radius:7px; padding:2px 7px; height:fit-content; }
+  .qtext { font-weight:600; font-size:15px; }
+
+  .opts { display:flex; flex-direction:column; gap:8px; }
+  .opt { display:flex; align-items:center; gap:11px; border:1.5px solid var(--line); border-radius:11px; padding:11px 13px; cursor:pointer; user-select:none; background:var(--surface); transition:border-color .12s, background .12s; min-height:46px; }
+  .opt:hover { border-color:var(--sel); }
+  .opt input { position:absolute; opacity:0; pointer-events:none; }
+  .opt .box { flex:0 0 auto; width:26px; height:26px; border-radius:8px; border:1.5px solid var(--line); background:var(--surface-2); display:grid; place-items:center; font-weight:800; font-size:13px; color:var(--muted); transition:all .12s; }
+  .opt .lbl { font-size:14.5px; }
+  .opt:focus-within { outline:2px solid var(--sel); outline-offset:2px; }
+  .opt.picked { border-color:var(--sel); background:var(--sel-bg); }
+  .opt.picked .box { background:var(--sel); border-color:var(--sel); color:#fff; }
+  .graded .opt { cursor:default; }
+  .graded .opt:hover { border-color:var(--line); }
+  .opt.correct { border-color:var(--good); background:var(--good-bg); }
+  .opt.correct .box { background:var(--good); border-color:var(--good); color:#fff; }
+  .opt.wrong { border-color:var(--bad); background:var(--bad-bg); }
+  .opt.wrong .box { background:var(--bad); border-color:var(--bad); color:#fff; }
+  .opt .mark { margin-left:auto; font-weight:800; font-size:13px; }
+  .opt.correct .mark { color:var(--good); } .opt.wrong .mark { color:var(--bad); }
+
+  .expl { margin-top:10px; font-size:13px; color:var(--ink); background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:9px 11px; display:none; }
+  .expl.show { display:block; } .expl b { color:var(--good); }
+
+  .results { display:none; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; margin-bottom:20px; scroll-margin-top:80px; }
+  .results.show { display:block; }
+  .score-big { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+  .score-big .n { font-size:42px; font-weight:800; line-height:1; }
+  .score-big .d { font-size:20px; color:var(--muted); font-weight:700; }
+  .score-big .pct { font-size:30px; font-weight:800; margin-left:6px; padding:2px 12px; border-radius:12px; background:var(--sel-bg); color:var(--sel); }
+  .score-big .pct.great { background:var(--good-bg); color:var(--good); }
+  .score-big .pct.work { background:var(--bad-bg); color:var(--bad); }
+  .score-big .verdict { margin-left:auto; font-weight:800; font-size:14px; padding:5px 12px; border-radius:999px; }
+  .v-great { background:var(--good-bg); color:var(--good); } .v-solid { background:var(--sel-bg); color:var(--sel); } .v-work { background:var(--bad-bg); color:var(--bad); }
+  .breakdown { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+  .bd { background:var(--surface-2); border:1px solid var(--line); border-top:3px solid var(--sec); border-radius:11px; padding:11px 12px; }
+  .bd .name { font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); }
+  .bd .val { font-size:22px; font-weight:800; margin-top:2px; }
+  .msg { margin-top:14px; font-size:13.5px; color:var(--muted); } .msg b { color:var(--ink); }
+
+  .bottom { position:fixed; left:0; right:0; bottom:0; z-index:20; background:color-mix(in srgb, var(--surface) 90%, transparent); backdrop-filter:blur(10px); border-top:1px solid var(--line); padding:11px 16px calc(11px + env(safe-area-inset-bottom)); }
+  .bottom-in { max-width:760px; margin:0 auto; display:flex; gap:10px; align-items:center; }
+  .count { font-size:13px; color:var(--muted); margin-right:auto; } .count b { color:var(--ink); }
+  button.action { border:none; border-radius:12px; padding:13px 22px; font-size:15px; font-weight:800; cursor:pointer; background:var(--brand); color:var(--brand-ink); transition:opacity .12s, transform .05s; }
+  button.action:active { transform:translateY(1px); }
+  button.action:disabled { opacity:.5; cursor:not-allowed; }
+  button.ghost { background:var(--surface-2); color:var(--ink); border:1px solid var(--line); }
+
+  @media (max-width:520px){ .breakdown { grid-template-columns:1fr 1fr 1fr; gap:7px; } .bd { padding:9px 8px; } .bd .val { font-size:18px; } .brand .s { display:none; } }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+
+<header>
+  <div class="head-row">
+    <div class="brand"><span class="t">MISMATHE · Mock 1</span><span class="s">Class 11 · PCM · Chem + Phys + Maths</span></div>
+    <div class="chip timer"><span class="k">Time</span><span class="v tnum" id="timer">40:00</span></div>
+    <div class="chip"><span class="k">Done</span><span class="v tnum" id="doneCount">0/30</span></div>
+    <button id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">◑</button>
+  </div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+</header>
+
+<main>
+  <p class="intro" id="intro"></p>
+  <div class="results" id="results" aria-live="polite">
+    <div class="score-big">
+      <span class="n tnum" id="scoreN">0</span><span class="d" id="scoreD">/ 30</span>
+      <span class="pct tnum" id="scorePct">0%</span>
+      <span class="verdict" id="verdict"></span>
+    </div>
+    <div class="breakdown">
+      <div class="bd sec-chem"><div class="name">Chemistry</div><div class="val tnum" id="bdChem">0/10</div></div>
+      <div class="bd sec-phys"><div class="name">Physics</div><div class="val tnum" id="bdPhys">0/10</div></div>
+      <div class="bd sec-math"><div class="name">Maths</div><div class="val tnum" id="bdMath">0/10</div></div>
+    </div>
+    <p class="msg" id="resultMsg"></p>
+  </div>
+  <div id="quiz"></div>
+</main>
+
+<div class="bottom">
+  <div class="bottom-in">
+    <span class="count" id="count"><b>0</b>/30 answered</span>
+    <button class="action ghost" id="resetBtn" style="display:none">Retake</button>
+    <button class="action" id="checkBtn">Check Answers</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var TITLE_MIN = 40; // minutes on the timer
+  var SEC = { chem:{name:"Chemistry",cls:"sec-chem"}, phys:{name:"Physics",cls:"sec-phys"}, math:{name:"Mathematics",cls:"sec-math"} };
+
+  var Q = [
+    {s:"chem",q:"The number of moles in 11 g of CO₂ (molar mass = 44 g/mol) is:",o:["0.25","0.5","1","0.025"],a:0,e:"n = mass / molar mass = 11 / 44 = 0.25 mol."},
+    {s:"chem",q:"The number of molecules present in 0.5 mole of O₂ is:",o:["6.022×10²³","3.011×10²³","1.2×10²⁴","3.011×10²²"],a:1,e:"molecules = 0.5 × 6.022×10²³ = 3.011×10²³.",mono:true},
+    {s:"chem",q:"Carbon forms CO and CO₂. For a fixed mass of carbon, the masses of oxygen are in ratio 1:2. This illustrates the law of:",o:["Conservation of mass","Definite proportions","Multiple proportions","Avogadro"],a:2,e:"Fixed mass of one element, the other in a simple whole-number ratio = Law of Multiple Proportions."},
+    {s:"chem",q:"The molarity of a solution containing 0.5 mol NaOH in 250 mL of solution is:",o:["1 M","2 M","0.5 M","4 M"],a:1,e:"M = moles / litres = 0.5 / 0.250 = 2 M."},
+    {s:"chem",q:"The molar mass of glucose (C₆H₁₂O₆) is:",o:["160 g/mol","172 g/mol","180 g/mol","200 g/mol"],a:2,e:"(12×6)+(1×12)+(16×6) = 72+12+96 = 180 g/mol."},
+    {s:"chem",q:"The number of significant figures in 0.00340 is:",o:["2","3","4","5"],a:1,e:"Leading zeros ignored; 3, 4 and trailing 0 count → 3 sig figs."},
+    {s:"chem",q:"“Equal volumes of all gases at the same temperature and pressure contain an equal number of molecules.” This is:",o:["Gay-Lussac’s law","Avogadro’s law","Dalton’s law","Boyle’s law"],a:1,e:"This is the definition of Avogadro’s law."},
+    {s:"chem",q:"The mass of 0.2 mole of water (H₂O, molar mass = 18 g/mol) is:",o:["1.8 g","3.6 g","18 g","9 g"],a:1,e:"mass = n × molar mass = 0.2 × 18 = 3.6 g."},
+    {s:"chem",q:"A compound has empirical formula CH₂ and molecular mass 42. Its molecular formula is:",o:["CH₂","C₂H₄","C₃H₆","C₄H₈"],a:2,e:"Empirical mass = 14; n = 42/14 = 3 → C₃H₆."},
+    {s:"chem",q:"The volume occupied by 1 mole of any gas at STP is:",o:["11.2 L","22.4 L","44.8 L","1 L"],a:1,e:"Molar volume of any gas at STP = 22.4 L."},
+    {s:"phys",q:"The dimensional formula of force is:",o:["[MLT⁻¹]","[MLT⁻²]","[ML²T⁻²]","[ML⁻¹T⁻²]"],a:1,e:"Force = mass × acceleration = [M][LT⁻²] = [MLT⁻²].",mono:true},
+    {s:"phys",q:"Which of the following is a fundamental (base) SI unit?",o:["newton","joule","kelvin","watt"],a:2,e:"kelvin is a base unit; newton, joule and watt are derived."},
+    {s:"phys",q:"The number of significant figures in 6.320×10³ is:",o:["2","3","4","5"],a:2,e:"6, 3, 2 and trailing 0 all count → 4 sig figs."},
+    {s:"phys",q:"The dimensional formula of work (or energy) is:",o:["[MLT⁻²]","[ML²T⁻²]","[ML²T⁻³]","[ML⁻¹T⁻²]"],a:1,e:"Work = force × distance = [MLT⁻²][L] = [ML²T⁻²].",mono:true},
+    {s:"phys",q:"The percentage errors in measuring A and B are 2% and 3%. The maximum percentage error in the product A×B is:",o:["1%","5%","6%","2.5%"],a:1,e:"For a product, percentage errors add: 2% + 3% = 5%."},
+    {s:"phys",q:"Which of the following quantities is dimensionless?",o:["velocity","strain","force","acceleration"],a:1,e:"Strain = change in length / original length → dimensionless."},
+    {s:"phys",q:"The dimensional formula of pressure is:",o:["[ML⁻¹T⁻²]","[MLT⁻²]","[ML²T⁻²]","[ML⁻²T⁻²]"],a:0,e:"Pressure = force / area = [MLT⁻²] / [L²] = [ML⁻¹T⁻²].",mono:true},
+    {s:"phys",q:"Which of the following is NOT a use of dimensional analysis?",o:["Checking correctness of an equation","Deriving a relation between quantities","Converting units between systems","Finding the value of dimensionless constants"],a:3,e:"Dimensional analysis cannot find dimensionless constants like 2 or π."},
+    {s:"phys",q:"The number of significant figures in 0.00580 is:",o:["2","3","4","5"],a:1,e:"Leading zeros ignored; 5, 8 and trailing 0 → 3 sig figs."},
+    {s:"phys",q:"The “accuracy” of a measurement refers to:",o:["closeness of repeated readings to each other","closeness of the measured value to the true value","the number of significant figures","the least count of the instrument"],a:1,e:"Accuracy = closeness to the true value. Precision = closeness of repeats to each other."},
+    {s:"math",q:"The value of sin 30° + cos 60° is:",o:["1","1/2","√3/2","0"],a:0,e:"sin30° + cos60° = ½ + ½ = 1.",mono:true},
+    {s:"math",q:"In which quadrant are both sin θ and cos θ negative?",o:["First","Second","Third","Fourth"],a:2,e:"In Quadrant III, sin and cos are both negative (only tan is positive)."},
+    {s:"math",q:"sin(−θ) is equal to:",o:["sin θ","−sin θ","cos θ","−cos θ"],a:1,e:"sin is an odd function → sin(−θ) = −sin θ.",mono:true},
+    {s:"math",q:"The value of tan 45° + cot 45° is:",o:["1","2","0","√2"],a:1,e:"tan45° + cot45° = 1 + 1 = 2.",mono:true},
+    {s:"math",q:"If sin θ = 3/5 and θ is acute, then cos θ equals:",o:["4/5","5/4","3/4","5/3"],a:0,e:"cosθ = √(1 − 9/25) = √(16/25) = 4/5.",mono:true},
+    {s:"math",q:"sin(90° + θ) is equal to:",o:["cos θ","−cos θ","sin θ","−sin θ"],a:0,e:"90°+θ lies in Q2 (sin +); 90° changes the function → +cos θ.",mono:true},
+    {s:"math",q:"The value of cos 120° is:",o:["1/2","−1/2","√3/2","−√3/2"],a:1,e:"cos120° = cos(180°−60°) = −cos60° = −½.",mono:true},
+    {s:"math",q:"The period of the function tan θ is:",o:["2π","π","π/2","4π"],a:1,e:"The period of tan (and cot) is π.",mono:true},
+    {s:"math",q:"1 + tan²θ is equal to:",o:["sec²θ","cosec²θ","cot²θ","1"],a:0,e:"Pythagorean identity: 1 + tan²θ = sec²θ.",mono:true},
+    {s:"math",q:"The value of sin 150° is:",o:["1/2","−1/2","√3/2","1"],a:0,e:"sin150° = sin(180°−30°) = +sin30° = ½.",mono:true}
+  ];
+
+  runQuiz(Q, TITLE_MIN);
+
+  function runQuiz(Q, minutes){
+    var LET=["A","B","C","D"];
+    var TOTAL=Q.length;
+    var picks=new Array(TOTAL).fill(-1);
+    var graded=false;
+    var quizEl=document.getElementById("quiz");
+    var secTotals={chem:0,phys:0,math:0};
+    Q.forEach(function(q){ secTotals[q.s]++; });
+
+    document.getElementById("intro").innerHTML = TOTAL+" single-correct questions · "+minutes+" minutes · +1 mark each, no negative marking. Tap an option to select — change it anytime before you check. When done, hit <b>Check Answers</b> at the bottom.";
+    document.getElementById("doneCount").textContent = "0/"+TOTAL;
+    document.getElementById("scoreD").textContent = "/ "+TOTAL;
+    document.getElementById("count").innerHTML = "<b>0</b>/"+TOTAL+" answered";
+    document.getElementById("bdChem").textContent = "0/"+secTotals.chem;
+    document.getElementById("bdPhys").textContent = "0/"+secTotals.phys;
+    document.getElementById("bdMath").textContent = "0/"+secTotals.math;
+
+    ["chem","phys","math"].forEach(function(secKey){
+      var idxs=Q.map(function(q,i){return q.s===secKey?i:-1;}).filter(function(i){return i>=0;});
+      if(!idxs.length) return;
+      var sh=document.createElement("div");
+      sh.className="sec-head "+SEC[secKey].cls;
+      sh.innerHTML='<span class="dot"></span><h2>'+SEC[secKey].name+'</h2><span class="rng">Q'+(idxs[0]+1)+'–Q'+(idxs[idxs.length-1]+1)+' · '+idxs.length+' marks</span>';
+      quizEl.appendChild(sh);
+      idxs.forEach(function(i){
+        var q=Q[i];
+        var card=document.createElement("div");
+        card.className="card "+SEC[secKey].cls; card.id="card"+i;
+        var head='<div class="qhead"><span class="qnum">Q'+(i+1)+'</span><span class="qtext">'+q.q+'</span></div>';
+        var opts='<div class="opts" role="radiogroup" aria-label="Question '+(i+1)+'">';
+        for(var j=0;j<4;j++){
+          opts+='<label class="opt" data-q="'+i+'" data-o="'+j+'"><span class="box">'+LET[j]+'</span><span class="lbl'+(q.mono?' mono':'')+'">'+q.o[j]+'</span><input type="radio" name="q'+i+'" value="'+j+'"></label>';
+        }
+        opts+='</div>';
+        card.innerHTML=head+opts+'<div class="expl" id="expl'+i+'"></div>';
+        quizEl.appendChild(card);
+      });
+    });
+
+    quizEl.addEventListener("change",function(ev){
+      if(graded) return;
+      var inp=ev.target; if(inp.tagName!=="INPUT") return;
+      var lbl=inp.closest(".opt"); var qi=+lbl.getAttribute("data-q");
+      picks[qi]=+lbl.getAttribute("data-o");
+      lbl.parentElement.querySelectorAll(".opt").forEach(function(el){el.classList.remove("picked");});
+      lbl.classList.add("picked"); updateCount();
+    });
+
+    function answered(){ return picks.filter(function(p){return p>=0;}).length; }
+    function updateCount(){
+      var n=answered();
+      document.getElementById("count").innerHTML="<b>"+n+"</b>/"+TOTAL+" answered";
+      document.getElementById("doneCount").textContent=n+"/"+TOTAL;
+      document.getElementById("bar").style.width=(n/TOTAL*100)+"%";
+    }
+
+    var checkBtn=document.getElementById("checkBtn"), resetBtn=document.getElementById("resetBtn");
+    checkBtn.addEventListener("click",grade);
+    resetBtn.addEventListener("click",function(){ location.reload(); });
+
+    function grade(){
+      if(graded) return; graded=true; stopTimer();
+      var score=0, per={chem:0,phys:0,math:0};
+      Q.forEach(function(q,i){
+        var card=document.getElementById("card"+i);
+        card.querySelector(".opts").classList.add("graded"); card.classList.add("graded");
+        var pick=picks[i];
+        card.querySelectorAll(".opt").forEach(function(lbl,j){
+          lbl.classList.remove("picked"); lbl.querySelector("input").disabled=true;
+          if(j===q.a){ lbl.classList.add("correct"); lbl.insertAdjacentHTML("beforeend",'<span class="mark">✓ correct</span>'); }
+          else if(j===pick){ lbl.classList.add("wrong"); lbl.insertAdjacentHTML("beforeend",'<span class="mark">✗ your pick</span>'); }
+        });
+        if(pick===q.a){ score++; per[q.s]++; }
+        var ex=document.getElementById("expl"+i);
+        var head=pick===q.a?"<b>Correct.</b> ":(pick<0?"Not answered. ":"Not quite. ");
+        ex.innerHTML=head+q.e; ex.classList.add("show");
+      });
+      showResults(score,per);
+    }
+
+    function showResults(score,per){
+      var pct=Math.round(score/TOTAL*100);
+      document.getElementById("scoreN").textContent=score;
+      var pctEl=document.getElementById("scorePct");
+      pctEl.textContent=pct+"%";
+      pctEl.classList.toggle("great",pct>=80); pctEl.classList.toggle("work",pct<60);
+      document.getElementById("bdChem").textContent=per.chem+"/"+secTotals.chem;
+      document.getElementById("bdPhys").textContent=per.phys+"/"+secTotals.phys;
+      document.getElementById("bdMath").textContent=per.math+"/"+secTotals.math;
+      var v=document.getElementById("verdict"), msg=document.getElementById("resultMsg");
+      if(pct>=80){ v.textContent="Excellent"; v.className="verdict v-great"; msg.innerHTML="<b>Strong — "+pct+"%.</b> You’re test-ready on these chapters. Skim the few you missed and lock them in."; }
+      else if(pct>=60){ v.textContent="Solid"; v.className="verdict v-solid"; msg.innerHTML="<b>Good base — "+pct+"%.</b> Fix the red ones, re-glance the formula sheet, and you’ll push past 80%."; }
+      else { v.textContent="Keep going"; v.className="verdict v-work"; msg.innerHTML="<b>No shame — "+pct+"% is data, not identity.</b> The red answers below are exactly what to revise. Retake tomorrow and watch it jump."; }
+      var wrong=[]; Q.forEach(function(q,i){ if(picks[i]!==q.a) wrong.push("Q"+(i+1)); });
+      if(wrong.length) msg.innerHTML+="<br>Review: <b>"+wrong.join(", ")+"</b>. Scroll down — each is marked with the right answer + why.";
+      var r=document.getElementById("results"); r.classList.add("show");
+      checkBtn.textContent="Checked ✓"; checkBtn.disabled=true; resetBtn.style.display="";
+      document.getElementById("count").innerHTML="Scored <b>"+score+"</b>/"+TOTAL+" ("+pct+"%)";
+      r.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+
+    // Timer
+    var remaining=minutes*60, tEl=document.getElementById("timer");
+    var timerId=setInterval(function(){ remaining--; if(remaining<=0){ remaining=0; render(); stopTimer(); if(!graded) grade(); return; } render(); },1000);
+    function render(){ var m=Math.floor(remaining/60),s=remaining%60; tEl.textContent=m+":"+(s<10?"0":"")+s; tEl.classList.toggle("warn",remaining<=300&&remaining>60); tEl.classList.toggle("crit",remaining<=60); }
+    function stopTimer(){ clearInterval(timerId); }
+    render(); updateCount();
+  }
+
+  var tb=document.getElementById("themeBtn");
+  tb.addEventListener("click",function(){
+    var root=document.documentElement, cur=root.getAttribute("data-theme");
+    if(!cur){ cur=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light"; }
+    root.setAttribute("data-theme",cur==="dark"?"light":"dark");
+  });
+})();
+</script>

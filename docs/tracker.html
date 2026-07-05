@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MISMATHE Tracker — Daily Tasks</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E✅%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg:#eef1f7; --surface:#ffffff; --surface-2:#f7f9fc;
+    --ink:#0f172a; --muted:#64748b; --line:#dbe2ec;
+    --brand:#4f46e5; --brand-bg:#eef2ff;
+    --good:#16a34a; --good-bg:#dcfce7;
+    --bad:#dc2626; --bad-bg:#fee2e2;
+    --ex:#c2410c; --ex-bg:#fff1e7;
+    --recap:#be185d; --recap-bg:#fdf2f8;
+    --warn:#b45309; --warn-bg:#fef3c7;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0b1120; --surface:#131a2b; --surface-2:#0f1626; --ink:#e6ebf5; --muted:#94a3b8; --line:#263149;
+      --brand:#818cf8; --brand-bg:#1c2647; --good:#4ade80; --good-bg:#12321d; --bad:#f87171; --bad-bg:#3a1618;
+      --ex:#fb923c; --ex-bg:#33200f; --recap:#f472b6; --recap-bg:#3a1225; --warn:#fbbf24; --warn-bg:#332708;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35); }
+  }
+  :root[data-theme="light"]{ --bg:#eef1f7; --surface:#ffffff; --surface-2:#f7f9fc; --ink:#0f172a; --muted:#64748b; --line:#dbe2ec;
+    --brand:#4f46e5; --brand-bg:#eef2ff; --good:#16a34a; --good-bg:#dcfce7; --bad:#dc2626; --bad-bg:#fee2e2;
+    --ex:#c2410c; --ex-bg:#fff1e7; --recap:#be185d; --recap-bg:#fdf2f8; --warn:#b45309; --warn-bg:#fef3c7;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06); }
+  :root[data-theme="dark"]{ --bg:#0b1120; --surface:#131a2b; --surface-2:#0f1626; --ink:#e6ebf5; --muted:#94a3b8; --line:#263149;
+    --brand:#818cf8; --brand-bg:#1c2647; --good:#4ade80; --good-bg:#12321d; --bad:#f87171; --bad-bg:#3a1618;
+    --ex:#fb923c; --ex-bg:#33200f; --recap:#f472b6; --recap-bg:#3a1225; --warn:#fbbf24; --warn-bg:#332708;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35); }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ overflow-x:hidden; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--ink);
+        font-size:15.5px; line-height:1.5; padding-bottom:40px; }
+  .tnum{ font-variant-numeric:tabular-nums; }
+  main{ max-width:640px; margin:0 auto; padding:14px 14px 30px; }
+
+  header.top{ position:sticky; top:0; z-index:10; background:color-mix(in srgb, var(--surface) 90%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .top-in{ max-width:640px; margin:0 auto; padding:10px 14px; display:flex; align-items:center; gap:10px; }
+  .top-in .t{ font-weight:800; letter-spacing:.4px; }
+  .top-in .clock{ margin-left:auto; text-align:right; }
+  .top-in .clock .d{ font-size:12px; color:var(--muted); }
+  .top-in .clock .c{ font-weight:800; font-size:15px; }
+  #themeBtn{ border:1px solid var(--line); background:var(--surface-2); color:var(--ink); width:34px; height:34px;
+    border-radius:9px; cursor:pointer; font-size:14px; }
+
+  /* consistency strip */
+  .stats{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:14px 0; }
+  .st{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:9px 6px; text-align:center; box-shadow:var(--shadow); }
+  .st .v{ font-size:19px; font-weight:800; }
+  .st .k{ font-size:9.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin-top:1px; }
+  .st.grade .v{ color:var(--brand); }
+  .st.ex .v{ color:var(--ex); }
+
+  /* day nav */
+  .daynav{ display:flex; align-items:center; gap:10px; margin:6px 0 10px; }
+  .daynav button{ border:1px solid var(--line); background:var(--surface); color:var(--ink); width:38px; height:38px;
+    border-radius:10px; font-size:16px; cursor:pointer; }
+  .daynav .dlabel{ flex:1; text-align:center; }
+  .daynav .dlabel .big{ font-weight:800; font-size:16.5px; }
+  .daynav .dlabel .sub{ font-size:12px; color:var(--muted); }
+  .daynav .today-chip{ font-size:10.5px; font-weight:800; color:var(--brand); background:var(--brand-bg);
+    padding:2px 8px; border-radius:999px; margin-left:6px; vertical-align:2px; }
+
+  .banner{ border-radius:12px; padding:10px 13px; font-size:13px; margin-bottom:12px; border:1px solid var(--line);
+    background:var(--surface-2); color:var(--muted); }
+  .banner.special{ background:var(--brand-bg); color:var(--ink); border-color:var(--brand); }
+
+  /* task list */
+  .group{ margin-bottom:14px; }
+  .group h3{ font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin:0 4px 7px; }
+  .task{ display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line);
+    border-radius:12px; padding:11px 13px; margin-bottom:7px; box-shadow:var(--shadow); cursor:pointer; user-select:none; }
+  .task:active{ transform:scale(.995); }
+  .task .cb{ flex:0 0 auto; width:28px; height:28px; border-radius:9px; border:2px solid var(--line);
+    background:var(--surface-2); display:grid; place-items:center; font-size:15px; color:transparent; transition:all .12s; }
+  .task .body{ flex:1; min-width:0; }
+  .task .nm{ font-weight:700; font-size:14.5px; }
+  .task .tm{ font-size:11.5px; color:var(--muted); }
+  .task .w{ flex:0 0 auto; font-size:9.5px; font-weight:800; padding:3px 8px; border-radius:999px; }
+  .task .w.core{ background:var(--brand-bg); color:var(--brand); }
+  .task .w.unc{ background:var(--ex-bg); color:var(--ex); }
+  .task .w.flex{ background:var(--surface-2); color:var(--muted); border:1px solid var(--line); }
+  .task .w.recap{ background:var(--recap-bg); color:var(--recap); }
+  .task.done{ border-color:var(--good); background:var(--good-bg); }
+  .task.done .cb{ background:var(--good); border-color:var(--good); color:#fff; }
+  .task.done .nm{ text-decoration:line-through; opacity:.75; }
+  .task.locked{ opacity:.55; cursor:not-allowed; }
+
+  .dayscore{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px;
+    box-shadow:var(--shadow); display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .dayscore .bar{ flex:1; height:9px; border-radius:5px; background:var(--line); overflow:hidden; }
+  .dayscore .bar i{ display:block; height:100%; width:0%; background:var(--good); border-radius:5px; transition:width .25s; }
+  .dayscore .pct{ font-weight:800; min-width:44px; text-align:right; }
+
+  button.big{ width:100%; border:none; border-radius:12px; padding:14px; font-size:15px; font-weight:800; cursor:pointer;
+    background:var(--recap); color:#fff; margin-bottom:8px; }
+  button.big.alt{ background:var(--surface); color:var(--ink); border:1px solid var(--line); }
+  .copied{ text-align:center; font-size:12.5px; color:var(--good); font-weight:700; min-height:18px; margin-bottom:8px; }
+
+  /* heatmap */
+  .heat{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:13px; box-shadow:var(--shadow); margin-top:6px; }
+  .heat h3{ font-size:12px; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); margin-bottom:9px; }
+  .heat-grid{ display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:5px; }
+  .hd{ aspect-ratio:1; border-radius:6px; background:var(--surface-2); border:1px solid var(--line);
+    display:grid; place-items:center; font-size:9px; color:var(--muted); font-weight:700; cursor:pointer; }
+  .hd.l1{ background:color-mix(in srgb, var(--good) 25%, var(--surface)); }
+  .hd.l2{ background:color-mix(in srgb, var(--good) 55%, var(--surface)); color:#fff; }
+  .hd.l3{ background:var(--good); color:#fff; }
+  .hd.miss{ background:var(--bad-bg); color:var(--bad); }
+  .hd.future{ opacity:.4; cursor:default; }
+  .hd.cur{ outline:2px solid var(--brand); }
+
+  .note{ font-size:12px; color:var(--muted); margin-top:14px; line-height:1.55; }
+  .note b{ color:var(--ink); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <span class="t">✅ MISMATHE Tracker</span>
+    <div class="clock"><div class="c tnum" id="clock">--:--</div><div class="d" id="clockDate">IST</div></div>
+    <button id="themeBtn" title="Theme">◑</button>
+  </div>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="st grade"><div class="v" id="stGrade">–</div><div class="k">MISMATHE rating</div></div>
+    <div class="st"><div class="v tnum" id="stStreak">0</div><div class="k">Day streak</div></div>
+    <div class="st ex"><div class="v tnum" id="stEx">0</div><div class="k">Exercise streak</div></div>
+    <div class="st"><div class="v tnum" id="st7">–</div><div class="k">7-day avg</div></div>
+  </div>
+
+  <div class="daynav">
+    <button id="prevD" aria-label="Previous day">‹</button>
+    <div class="dlabel"><div class="big" id="dayTitle">…</div><div class="sub" id="daySub">…</div></div>
+    <button id="nextD" aria-label="Next day">›</button>
+  </div>
+
+  <div class="banner" id="banner"></div>
+  <div id="tasks"></div>
+
+  <div class="dayscore">
+    <span style="font-size:12.5px;color:var(--muted);font-weight:700">Day score</span>
+    <div class="bar"><i id="dayBar"></i></div>
+    <span class="pct tnum" id="dayPct">0%</span>
+  </div>
+
+  <button class="big" id="copyRecap">📲 Copy tonight's recap for MISMATHE</button>
+  <button class="big alt" id="copyWeek">📊 Copy 7-day report for MISMATHE</button>
+  <div class="copied" id="copied"></div>
+
+  <div class="heat">
+    <h3>Month heatmap — 5 Jul → 5 Aug</h3>
+    <div class="heat-grid" id="heat"></div>
+  </div>
+
+  <p class="note"><b>How this connects to MISMATHE:</b> tick your tasks through the day, then at 9:45 pm hit
+  <b>“Copy tonight's recap”</b> and paste it into our chat. I read your ticks, your score and your streaks, fix your
+  confusion of the day, and rate your consistency. Sundays, send the 7-day report too.<br/><br/>
+  <b>Note:</b> ticks are saved in this browser (works offline). Use one main device for ticking — your recap message to
+  me is the master record, so nothing is ever lost.</p>
+</main>
+
+<script>
+(function(){
+"use strict";
+/* ---------- IST date helpers ---------- */
+function istParts(d){ // returns {y,m,d,hh,mm,dow} in IST for a Date
+  var p=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false,weekday:"short"}).formatToParts(d||new Date());
+  var o={}; p.forEach(function(x){o[x.type]=x.value;});
+  return {y:+o.year,m:+o.month,d:+o.day,hh:+o.hour,mm:o.minute,dow:o.weekday};
+}
+function key(y,m,d){ return y+"-"+String(m).padStart(2,"0")+"-"+String(d).padStart(2,"0"); }
+function fromKey(k){ var a=k.split("-"); return {y:+a[0],m:+a[1],d:+a[2]}; }
+function addDays(k,n){ var p=fromKey(k); var dt=new Date(Date.UTC(p.y,p.m-1,p.d+n)); return key(dt.getUTCFullYear(),dt.getUTCMonth()+1,dt.getUTCDate()); }
+function dowOf(k){ var p=fromKey(k); return new Date(Date.UTC(p.y,p.m-1,p.d)).getUTCDay(); } // 0=Sun
+function fmt(k){ var p=fromKey(k); var names=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return {dow:names[dowOf(k)], short:p.d+" "+mo[p.m-1]}; }
+function todayKey(){ var t=istParts(); return key(t.y,t.m,t.d); }
+
+var START="2026-07-05", END="2026-08-05";
+
+/* ---------- week themes ---------- */
+function weekTheme(k){
+  if(k<"2026-07-06") return {phys:"—",chem:"—",math:"—",label:"Day 0 · Test day"};
+  if(k<="2026-07-12") return {phys:"Mathematical Methods",chem:"Intro to Analytical Chemistry",math:"Trigonometry-II (start)",label:"Week 1 · Repair & launch"};
+  if(k<="2026-07-19") return {phys:"Motion in a Plane (start)",chem:"Basic Analytical Tech → Structure of Atom",math:"Trigonometry-II (finish)",label:"Week 2 · Momentum"};
+  if(k<="2026-07-26") return {phys:"Motion in a Plane (finish)",chem:"Structure of Atom (core)",math:"Determinants & Matrices (start)",label:"Week 3 · Heavyweights"};
+  if(k<="2026-08-02") return {phys:"Laws of Motion (start)",chem:"Chemical Bonding (start)",math:"Determinants & Matrices (finish)",label:"Week 4 · Priority strike"};
+  return {phys:"Mega-mock gap fixes",chem:"Mega-mock gap fixes",math:"Mega-mock gap fixes",label:"Week 5 · Close the loop"};
+}
+function dayFocus(k,th){
+  var dw=dowOf(k);
+  if(dw===1||dw===4) return {sub:"Physics",ch:th.phys};
+  if(dw===2||dw===5) return {sub:"Chemistry",ch:th.chem};
+  if(dw===6) return {sub:"Maths",ch:th.math};
+  return null;
+}
+
+/* ---------- task generation ---------- */
+function tasksFor(k){
+  var dw=dowOf(k), th=weekTheme(k), f=dayFocus(k,th), T=[];
+  function t(id,nm,tm,wt,cls){ T.push({id:id,nm:nm,tm:tm,wt:wt,cls:cls}); }
+  t("ex","🏋️ Exercise (30+ min)","7:15 – 7:55 am",3,"unc");
+  if(k==="2026-07-05"){
+    t("test","🎯 Tuition test (9–12) — DONE, it's behind you","9:00 – 12:00",3,"core");
+    t("rest","😌 Real rest — food, nap, something fun","afternoon",1,"flex");
+    t("recap","📲 TEST DEBRIEF recap → MISMATHE","9:45 pm",3,"recap");
+    return T;
+  }
+  if(k==="2026-08-02"){
+    t("mock","🏆 MONTH MEGA-MOCK (100-marker)","9:00 – 10:45",3,"core");
+    t("post","🔍 Mega-mock post-mortem + tag misses","11:00 – 12:00",2,"core");
+    t("patch","🩹 Patch session on exposed gaps","2:30 – 3:30",1,"flex");
+    t("recap","📲 Recap + mock score → MISMATHE","9:45 pm",3,"recap");
+    return T;
+  }
+  if(k==="2026-08-05"){
+    t("rev","📊 Month review with MISMATHE + August plan","10:00 – 11:30",3,"core");
+    t("recap","📲 Recap → MISMATHE","9:45 pm",3,"recap");
+    return T;
+  }
+  if(dw===0){ // Sunday
+    t("mock","📝 Weekly mock — 9 AM sharp","9:00 – 10:45",3,"core");
+    t("post","🔍 Post-mortem: tag concept/formula/silly","11:00 – 12:00",2,"core");
+    t("patch","🩹 Patch session on what mock exposed","2:30 – 3:30",1,"flex");
+  } else if(dw===3){ // Wednesday
+    t("backlog","🧹 Backlog block (starred doubts, unfinished)","9:30 – 11:00",2,"core");
+    t("drill","🎯 Weak-area drill (Chem/Phys bias)","11:15 – 12:15",2,"core");
+    t("weekrev","📚 Full-week revision (3 formula sheets)","2:30 – 4:00",2,"core");
+  } else { // coaching day
+    var fl=f?(" — "+f.sub+": "+f.ch):"";
+    t("b1","📘 Deep Block 1"+fl,"9:30 – 11:00",3,"core");
+    t("b2","✍️ Block 2 — 20-25 practice MCQs","11:15 – 12:15",2,"core");
+    t("b3","🔁 Block 3 — maths keep-sharp + revision","2:30 – 3:20",1,"flex");
+    t("ved","🏫 Vedantu coaching","4:00 – 7:30",2,"core");
+    t("b4","📖 Block 4 — re-solve coaching examples","9:00 – 9:45",2,"core");
+  }
+  t("recap","📲 Daily recap → MISMATHE (5 lines)","9:45 pm",3,"recap");
+  return T;
+}
+function specialBanner(k){
+  if(k==="2026-07-05") return {txt:"🎯 DAY 0 — your first tuition test was this morning. Tonight's recap = the full debrief.",sp:true};
+  if(k==="2026-08-02") return {txt:"🏆 MONTH MEGA-MOCK DAY — the month's report card. Same 9 AM discipline.",sp:true};
+  if(k==="2026-08-05") return {txt:"📊 Month review day — we grade the month and build August from real data.",sp:true};
+  var dw=dowOf(k), th=weekTheme(k);
+  if(dw===0) return {txt:"📝 Mock Sunday · "+th.label+" — evening is FREE after the patch session.",sp:false};
+  if(dw===3) return {txt:"🧹 Revision Wednesday · "+th.label+" — no new content today. Evening FREE.",sp:false};
+  var f=dayFocus(k,th);
+  return {txt:th.label+" · Focus: "+(f?f.sub+" — "+f.ch:""),sp:false};
+}
+
+/* ---------- storage ---------- */
+var KEY="mismathe-tracker-v1";
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return {}; } }
+function save(db){ try{ localStorage.setItem(KEY,JSON.stringify(db)); }catch(e){} }
+var db=load();
+
+/* ---------- scoring ---------- */
+function scoreFor(k){
+  var T=tasksFor(k), st=db[k]||{}, got=0, tot=0, exd=false;
+  T.forEach(function(x){ tot+=x.wt; if(st[x.id]){ got+=x.wt; if(x.id==="ex") exd=true; } });
+  return {pct: tot? Math.round(got/tot*100):0, ex: exd, any: Object.keys(st).some(function(i){return st[i];})};
+}
+function streaks(){
+  var tk=todayKey(), s=0, ex=0, k, sc;
+  // day streak: consecutive days ending today (or yesterday if today untouched) with score>=70
+  k=tk; sc=scoreFor(k);
+  if(sc.pct<70 && !sc.any) k=addDays(k,-1);      // today not started yet -> count from yesterday
+  while(k>=START){ sc=scoreFor(k); if(sc.pct>=70){ s++; k=addDays(k,-1);} else break; }
+  k=tk; sc=scoreFor(k);
+  if(!sc.ex) k=addDays(k,-1);
+  while(k>=START){ if(scoreFor(k).ex){ ex++; k=addDays(k,-1);} else break; }
+  return {day:s, ex:ex};
+}
+function avg7(){
+  var tk=todayKey(), sum=0,n=0,k=addDays(tk,-1);
+  for(var i=0;i<7;i++){ if(k>=START && k<tk){ sum+=scoreFor(k).pct; n++; } k=addDays(k,-1); }
+  return n? Math.round(sum/n) : null;
+}
+function grade(){
+  var a=avg7(); if(a===null) return {g:"NEW",m:"First days — data building."};
+  if(a>=85) return {g:"A+",m:"Elite consistency. This is topper behaviour."};
+  if(a>=70) return {g:"A",m:"Strong week. Protect the core."};
+  if(a>=55) return {g:"B",m:"Decent — tighten the core blocks."};
+  if(a>=35) return {g:"C",m:"Slipping. Never two bad days in a row."};
+  return {g:"D",m:"Restart today. Past is dead — streak begins now."};
+}
+
+/* ---------- render ---------- */
+var view=todayKey();
+if(view<START) view=START; if(view>END) view=END;
+
+function render(){
+  var tk=todayKey();
+  var f=fmt(view);
+  document.getElementById("dayTitle").innerHTML=f.dow+", "+f.short+(view===tk?'<span class="today-chip">TODAY</span>':"");
+  document.getElementById("daySub").textContent=(view===tk?"Indian Standard Time":"Viewing "+(view<tk?"a past day":"a future day"));
+  var b=specialBanner(view), bE=document.getElementById("banner");
+  bE.textContent=b.txt; bE.className="banner"+(b.sp?" special":"");
+
+  var T=tasksFor(view), st=db[view]||{}, wrap=document.getElementById("tasks");
+  var locked = view>tk;
+  wrap.innerHTML="";
+  var groups={unc:"Non-negotiable",core:"Core blocks",flex:"Flex",recap:"Connect to MISMATHE"};
+  ["unc","core","flex","recap"].forEach(function(g){
+    var items=T.filter(function(x){return x.cls===g;});
+    if(!items.length) return;
+    var gd=document.createElement("div"); gd.className="group";
+    gd.innerHTML="<h3>"+groups[g]+"</h3>";
+    items.forEach(function(x){
+      var d=document.createElement("div");
+      d.className="task"+(st[x.id]?" done":"")+(locked?" locked":"");
+      d.innerHTML='<span class="cb">✓</span><span class="body"><div class="nm">'+x.nm+'</div><div class="tm tnum">'+x.tm+'</div></span><span class="w '+x.cls+'">'+(x.cls==="unc"?"UNCOMPROMISING":x.cls==="core"?"CORE":x.cls==="recap"?"RECAP":"FLEX")+'</span>';
+      if(!locked){
+        d.addEventListener("click",function(){
+          db[view]=db[view]||{}; db[view][x.id]=!db[view][x.id]; save(db); render();
+        });
+      }
+      gd.appendChild(d);
+    });
+    wrap.appendChild(gd);
+  });
+
+  var sc=scoreFor(view);
+  document.getElementById("dayBar").style.width=sc.pct+"%";
+  document.getElementById("dayBar").style.background=sc.pct>=70?"var(--good)":(sc.pct>=40?"var(--warn)":"var(--bad)");
+  document.getElementById("dayPct").textContent=sc.pct+"%";
+
+  var stk=streaks(), g=grade(), a=avg7();
+  document.getElementById("stStreak").textContent=stk.day;
+  document.getElementById("stEx").textContent=stk.ex;
+  document.getElementById("st7").textContent=(a===null?"–":a+"%");
+  document.getElementById("stGrade").textContent=g.g;
+
+  renderHeat();
+}
+
+function renderHeat(){
+  var h=document.getElementById("heat"); h.innerHTML="";
+  var tk=todayKey(), k=START;
+  while(k<=END){
+    var p=fromKey(k), sc=scoreFor(k), d=document.createElement("div");
+    d.className="hd"; d.textContent=p.d;
+    if(k>tk) d.className+=" future";
+    else if(sc.pct>=85) d.className+=" l3";
+    else if(sc.pct>=60) d.className+=" l2";
+    else if(sc.pct>=30) d.className+=" l1";
+    else if(k<tk) d.className+=" miss";
+    if(k===view) d.className+=" cur";
+    (function(kk){ d.addEventListener("click",function(){ if(kk<=tk){ view=kk; render(); window.scrollTo({top:0,behavior:"smooth"});} }); })(k);
+    h.appendChild(d);
+    k=addDays(k,1);
+  }
+}
+
+/* ---------- recap copy ---------- */
+function copyText(txt,btnMsg){
+  function ok(){ var c=document.getElementById("copied"); c.textContent=btnMsg; setTimeout(function(){c.textContent="";},4000); }
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok,function(){fallback();}); }
+  else fallback();
+  function fallback(){ var ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
+    try{document.execCommand("copy");}catch(e){} document.body.removeChild(ta); ok(); }
+}
+document.getElementById("copyRecap").addEventListener("click",function(){
+  var k=view>todayKey()?todayKey():view, T=tasksFor(k), st=db[k]||{}, f=fmt(k), sc=scoreFor(k), stk=streaks();
+  var lines=["📲 MISMATHE Daily Recap — "+f.dow+" "+f.short];
+  T.forEach(function(x){ lines.push((st[x.id]?"✅":"❌")+" "+x.nm); });
+  lines.push("Day score: "+sc.pct+"% | Streak: "+stk.day+" | Exercise streak: "+stk.ex);
+  lines.push("");
+  lines.push("3 learnings:"); lines.push("1) "); lines.push("2) "); lines.push("3) ");
+  lines.push("1 confusion: ");
+  lines.push("Focus /10:   Energy /10:   Hours: ");
+  copyText(lines.join("\n"),"✅ Copied! Paste it in your MISMATHE chat.");
+});
+document.getElementById("copyWeek").addEventListener("click",function(){
+  var tk=todayKey(), lines=["📊 MISMATHE 7-Day Report (ending "+fmt(tk).short+")"], k=addDays(tk,-6);
+  for(var i=0;i<7;i++){ if(k>=START&&k<=tk){ var sc=scoreFor(k), f=fmt(k);
+      lines.push(f.dow.slice(0,3)+" "+f.short+": "+sc.pct+"%"+(sc.ex?" 🏋️":" (no exercise)")); }
+    k=addDays(k,1); }
+  var a=avg7(), g=grade(), stx=streaks();
+  lines.push("7-day avg: "+(a===null?"n/a":a+"%")+" | Grade: "+g.g+" | Streak: "+stx.day+" | Ex streak: "+stx.ex);
+  lines.push("Biggest win this week: ");
+  lines.push("Biggest struggle: ");
+  copyText(lines.join("\n"),"✅ Week report copied! Paste it in your MISMATHE chat.");
+});
+
+/* ---------- nav + clock + theme ---------- */
+document.getElementById("prevD").addEventListener("click",function(){ if(view>START){ view=addDays(view,-1); render(); }});
+document.getElementById("nextD").addEventListener("click",function(){ if(view<END){ view=addDays(view,1); render(); }});
+function tick(){ var t=istParts(); document.getElementById("clock").textContent=String(t.hh).padStart(2,"0")+":"+t.mm+" IST";
+  var f=fmt(key(t.y,t.m,t.d)); document.getElementById("clockDate").textContent=f.dow.slice(0,3)+", "+f.short;
+  }
+tick(); setInterval(tick,15000);
+// auto-jump to new day at midnight IST
+setInterval(function(){ var tk=todayKey(); if(view===addDays(tk,-1)&&scoreFor(view).any){ /* stay if reviewing */ } },60000);
+document.getElementById("themeBtn").addEventListener("click",function(){
+  var r=document.documentElement,c=r.getAttribute("data-theme");
+  if(!c){ c=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light"; }
+  r.setAttribute("data-theme",c==="dark"?"light":"dark");
+});
+
+render();
+})();
+</script>
+</body>
+</html>
