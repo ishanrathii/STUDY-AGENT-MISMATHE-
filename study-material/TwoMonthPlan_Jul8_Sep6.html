@@ -1,0 +1,330 @@
+<title>MISMATHE — 2-Month Plan · 8 Jul → 6 Sep</title>
+<style>
+  :root {
+    --bg:#eef1f7; --surface:#ffffff; --surface-2:#f7f9fc;
+    --ink:#0f172a; --muted:#64748b; --line:#dbe2ec;
+    --chem:#1f3a93; --phys:#0e7490; --math:#6d28d9;
+    --brand:#4f46e5; --brand-bg:#eef2ff;
+    --ex:#c2410c; --ex-bg:#fff1e7;
+    --mock:#16a34a; --mock-bg:#dcfce7;
+    --rev:#b45309; --rev-bg:#fef3c7;
+    --recap:#be185d; --recap-bg:#fdf2f8;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0b1120; --surface:#131a2b; --surface-2:#0f1626; --ink:#e6ebf5; --muted:#94a3b8; --line:#263149;
+      --chem:#7d97ff; --phys:#2cc0d4; --math:#a78bfa; --brand:#818cf8; --brand-bg:#1c2647;
+      --ex:#fb923c; --ex-bg:#33200f; --mock:#4ade80; --mock-bg:#12321d; --rev:#fbbf24; --rev-bg:#332708;
+      --recap:#f472b6; --recap-bg:#3a1225; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35); }
+  }
+  :root[data-theme="light"]{ --bg:#eef1f7; --surface:#ffffff; --surface-2:#f7f9fc; --ink:#0f172a; --muted:#64748b; --line:#dbe2ec;
+    --chem:#1f3a93; --phys:#0e7490; --math:#6d28d9; --brand:#4f46e5; --brand-bg:#eef2ff;
+    --ex:#c2410c; --ex-bg:#fff1e7; --mock:#16a34a; --mock-bg:#dcfce7; --rev:#b45309; --rev-bg:#fef3c7;
+    --recap:#be185d; --recap-bg:#fdf2f8; --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06); }
+  :root[data-theme="dark"]{ --bg:#0b1120; --surface:#131a2b; --surface-2:#0f1626; --ink:#e6ebf5; --muted:#94a3b8; --line:#263149;
+    --chem:#7d97ff; --phys:#2cc0d4; --math:#a78bfa; --brand:#818cf8; --brand-bg:#1c2647;
+    --ex:#fb923c; --ex-bg:#33200f; --mock:#4ade80; --mock-bg:#12321d; --rev:#fbbf24; --rev-bg:#332708;
+    --recap:#f472b6; --recap-bg:#3a1225; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35); }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--ink); line-height:1.55; font-size:15.5px; padding-bottom:60px; }
+  .tnum{ font-variant-numeric:tabular-nums; }
+  main{ max-width:860px; margin:0 auto; padding:20px 16px; }
+
+  header.hero{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; margin-bottom:18px; position:relative; }
+  .hero h1{ font-size:24px; letter-spacing:.3px; }
+  .hero h1 .grad{ color:var(--brand); }
+  .hero .sub{ color:var(--muted); margin-top:6px; font-size:14px; max-width:660px; }
+  .hero .range{ display:inline-block; margin-top:12px; background:var(--brand-bg); color:var(--brand); font-weight:800; padding:6px 14px; border-radius:999px; font-size:13px; }
+  #themeBtn{ position:absolute; top:18px; right:18px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); width:36px; height:36px; border-radius:10px; cursor:pointer; font-size:15px; }
+
+  h2.sec{ font-size:17px; margin:26px 4px 12px; display:flex; align-items:center; gap:8px; }
+  h2.sec .bar{ width:5px; height:20px; border-radius:3px; background:var(--brand); display:inline-block; }
+
+  .card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; margin-bottom:14px; }
+
+  table.tl{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.tl td{ border-bottom:1px solid var(--line); padding:8px 8px; vertical-align:top; }
+  table.tl tr:last-child td{ border-bottom:none; }
+  td.time{ white-space:nowrap; font-weight:800; width:112px; font-variant-numeric:tabular-nums; }
+  tr.ex td{ background:var(--ex-bg); } tr.ex td.time{ color:var(--ex); }
+  tr.recap td{ background:var(--recap-bg); } tr.recap td.time{ color:var(--recap); }
+  tr.coach td{ background:var(--brand-bg); } tr.coach td.time{ color:var(--brand); }
+  .pill{ display:inline-block; font-size:10.5px; font-weight:800; padding:2px 9px; border-radius:999px; margin-left:6px; vertical-align:1px; }
+  .pill.ex{ background:var(--ex); color:#fff; }
+  .pill.core{ background:var(--brand); color:#fff; }
+  .pill.flex{ background:var(--surface-2); color:var(--muted); border:1px solid var(--line); }
+
+  /* decision box */
+  .decision{ border:2px solid var(--brand); }
+  .decision h3{ font-size:15.5px; margin-bottom:8px; }
+  .dec-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; margin-top:10px; }
+  .dec{ border:1px solid var(--line); border-radius:11px; padding:12px 14px; background:var(--surface-2); font-size:13px; }
+  .dec.win{ border-color:var(--mock); background:var(--mock-bg); }
+  .dec h4{ font-size:13.5px; margin-bottom:5px; }
+  .dec ul{ margin-left:16px; }
+  .dec li{ margin-bottom:3px; }
+  .verdict{ margin-top:12px; font-size:13.5px; background:var(--brand-bg); border-radius:10px; padding:11px 13px; }
+  .verdict b{ color:var(--brand); }
+
+  /* test timeline */
+  .miles{ position:relative; }
+  .mile{ display:flex; gap:14px; padding:9px 0; border-bottom:1px dashed var(--line); align-items:flex-start; }
+  .mile:last-child{ border-bottom:none; }
+  .mile .d{ flex:0 0 92px; font-weight:800; font-size:13px; font-variant-numeric:tabular-nums; }
+  .mile .what{ flex:1; font-size:13.5px; }
+  .mile .what b{ display:block; }
+  .mile .what span{ color:var(--muted); font-size:12.5px; }
+  .mile.real .d{ color:var(--brand); }
+  .mile.real .what b{ color:var(--brand); }
+  .mile.selfm .d{ color:var(--mock); }
+
+  /* week cards */
+  .wk{ border-left:4px solid var(--brand); }
+  .wk h3{ font-size:15px; margin-bottom:2px; }
+  .wk .dates{ color:var(--muted); font-size:12.5px; margin-bottom:10px; }
+  .wk-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
+  .wk-s{ border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:var(--surface-2); border-top:3px solid var(--sub); }
+  .wk-s .nm{ font-size:10.5px; text-transform:uppercase; letter-spacing:.6px; font-weight:800; color:var(--sub); }
+  .wk-s .ch{ font-weight:700; font-size:13.5px; margin-top:2px; }
+  .s-chem{ --sub:var(--chem); } .s-phys{ --sub:var(--phys); } .s-math{ --sub:var(--math); }
+  .wk .note{ margin-top:10px; font-size:12.5px; color:var(--muted); }
+  .wk .note b{ color:var(--ink); }
+  .wk.testwk{ border-left-color:var(--recap); }
+
+  .contract{ border-left:4px solid var(--ex); }
+  .contract.recap-c{ border-left-color:var(--recap); }
+  .contract h3{ font-size:15.5px; margin-bottom:8px; }
+  .contract ol, .contract ul{ margin-left:20px; }
+  .contract li{ margin-bottom:5px; font-size:13.5px; }
+  .contract .small{ font-size:12px; color:var(--muted); margin-top:8px; }
+
+  .rules{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; }
+  .rule{ border:1px solid var(--line); border-radius:10px; padding:11px 13px; background:var(--surface-2); font-size:13px; }
+  .rule b{ display:block; margin-bottom:2px; }
+
+  .foot{ text-align:center; color:var(--muted); font-size:12px; margin-top:26px; font-style:italic; }
+</style>
+
+<main>
+<header class="hero">
+  <button id="themeBtn" title="Toggle theme">◑</button>
+  <h1>MISMATHE <span class="grad">2-Month Plan</span> · v2 fresh</h1>
+  <p class="sub">Built on Ishan's REAL day: wake 6:00 · exercise · study 8–12 · lunch · 12:30–2:00 free · tuition 2:00 → home ~8:45 · dinner · 1–2 night hrs. Wed &amp; Sun no tuition. All Vedantu tests: Sundays 9–12.</p>
+  <span class="range tnum">WED 8 JULY → SUN 6 SEPTEMBER 2026 · ends on RT-04</span>
+</header>
+
+<!-- ============ DECISION ============ -->
+<h2 class="sec"><span class="bar"></span>The night-owl question — MISMATHE's verdict</h2>
+<div class="card decision">
+  <h3>Option A: keep 6 AM rhythm &nbsp;vs&nbsp; Option B: study late nights, wake late</h3>
+  <div class="dec-grid">
+    <div class="dec win">
+      <h4>✅ Option A — early bird (CHOSEN)</h4>
+      <ul>
+        <li><b>Every test you'll ever write is 9 AM</b> — RTs, CTs, FLTs, MHT-CET itself. Morning brain = trained match-fit brain.</li>
+        <li>Your best block (8–12, 4 hrs) stays alive.</li>
+        <li>6 AM wake + exercise is already your habit — never break a working system.</li>
+        <li>Phone temptation at 8 AM ≈ zero. At midnight ≈ maximum.</li>
+      </ul>
+    </div>
+    <div class="dec">
+      <h4>🌙 Option B — night owl (parked, not deleted)</h4>
+      <ul>
+        <li>Quiet house, no interruptions — real advantage.</li>
+        <li>Learn-at-night → sleep → morning revision is good memory science…</li>
+        <li>…but it costs the 4-hr morning block and de-syncs you from 9 AM test timing.</li>
+        <li>Highest reels-risk hour of the day.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="verdict"><b>Verdict:</b> Option A, with B's best idea stolen — your night hour = <b>light coaching recap</b>, and every morning opens with a <b>10-min recall</b> of last night's material (sleep-consolidation bonus, no downside). <b>Trial clause:</b> if 2 weeks of tracker recaps show night focus consistently beating morning focus, we run a 1-week night-shift experiment and let the data decide. Test weeks excluded — Saturday nights before a test, sleep by 10:30, always.</div>
+</div>
+
+<!-- ============ DAILY TEMPLATES ============ -->
+<h2 class="sec"><span class="bar"></span>Daily template — tuition days (Mon · Tue · Thu · Fri · Sat)</h2>
+<div class="card">
+  <table class="tl">
+    <tr><td class="time tnum">6:00</td><td>Wake. No phone for the first 30 minutes.</td></tr>
+    <tr class="ex"><td class="time tnum">6:15–7:00</td><td><b>🏋️ EXERCISE</b> <span class="pill ex">UNCOMPROMISING</span> — already your habit. First win, every day.</td></tr>
+    <tr><td class="time tnum">7:00–8:00</td><td>Fresh up · breakfast.</td></tr>
+    <tr><td class="time tnum">8:05–8:15</td><td><b>10-min recall</b> — close-book: what did last night's block cover? (sleep-consolidation bonus)</td></tr>
+    <tr><td class="time tnum">8:15–9:45</td><td><b>📘 Deep Block 1 — day's focus chapter</b> <span class="pill core">CORE</span> — new theory + solved examples. Phone in another room.</td></tr>
+    <tr><td class="time tnum">9:45–10:00</td><td>Break — walk, water, no scroll.</td></tr>
+    <tr><td class="time tnum">10:00–11:15</td><td><b>✍️ Block 2 — 20–25 practice MCQs</b> <span class="pill core">CORE</span> on Block 1's topic. Star every doubt.</td></tr>
+    <tr><td class="time tnum">11:30–12:00</td><td><b>🔁 Block 3 — maths keep-sharp sprint</b> <span class="pill flex">FLEX</span> — 30 min timed questions.</td></tr>
+    <tr><td class="time tnum">12:00–12:30</td><td>Lunch.</td></tr>
+    <tr><td class="time tnum">12:30–1:45</td><td><b>📖 Block 4 — spaced revision</b> <span class="pill core">CORE</span> — yesterday + 3-days-ago formulas + starred doubts. Pack for tuition by 1:45.</td></tr>
+    <tr class="coach"><td class="time tnum">2:00–8:45</td><td><b>🏫 Tuition (travel + classes) → home ~8:45.</b> Note every topic covered — tomorrow's Block 1 syncs to it.</td></tr>
+    <tr><td class="time tnum">9:00–9:30</td><td>Dinner · family.</td></tr>
+    <tr><td class="time tnum">9:30–10:30</td><td><b>🌙 Night block</b> <span class="pill flex">FLEX</span> — coaching recap (re-solve today's class examples) <b>or tech/website night (max 2×/week)</b>.</td></tr>
+    <tr class="recap"><td class="time tnum">10:30–10:45</td><td><b>📲 DAILY RECAP → MISMATHE</b> — tick tracker, hit the pink button, paste.</td></tr>
+    <tr><td class="time tnum">11:00</td><td>Sleep. 7 hrs to your 6:00 alarm — non-negotiable.</td></tr>
+  </table>
+  <p style="margin-top:10px;font-size:12.5px;color:var(--muted)">≈ 4.5 hrs self-study + tuition. Bad day? Protect <b>exercise + Block 1 + Block 2 + recap</b>; drop FLEX guilt-free. Never two bad days in a row.</p>
+</div>
+
+<h2 class="sec"><span class="bar"></span>Wednesday — revision &amp; backlog (no tuition, no new content)</h2>
+<div class="card">
+  <table class="tl">
+    <tr class="ex"><td class="time tnum">6:15–7:00</td><td><b>🏋️ EXERCISE</b> <span class="pill ex">UNCOMPROMISING</span></td></tr>
+    <tr><td class="time tnum">8:15–9:45</td><td><b>🧹 Backlog block</b> — everything that slipped this week.</td></tr>
+    <tr><td class="time tnum">10:00–11:15</td><td><b>🎯 Weak-area drill</b> — built by MISMATHE from your recaps (Chem/Phys bias).</td></tr>
+    <tr><td class="time tnum">12:30–1:45</td><td><b>📚 Full-week revision</b> — formula sheets aloud + redo starred questions.</td></tr>
+    <tr><td class="time tnum">2:00 →</td><td><b>FREE.</b> Genuinely free — friends, cricket, movie, tech projects. Recovery is part of the system.</td></tr>
+    <tr class="recap"><td class="time tnum">10:30 pm</td><td><b>📲 DAILY RECAP → MISMATHE</b></td></tr>
+  </table>
+</div>
+
+<h2 class="sec"><span class="bar"></span>Sunday — mock / real-test day (9 AM, always)</h2>
+<div class="card">
+  <table class="tl">
+    <tr class="ex"><td class="time tnum">6:15–7:00</td><td><b>🏋️ EXERCISE</b> (light on real-test days)</td></tr>
+    <tr><td class="time tnum">9:00–12:00</td><td><b>🎯 REAL TEST @ Vedantu</b> on test Sundays · <b>📝 Self-mock dry run</b> (9:00–10:45) on free Sundays.</td></tr>
+    <tr><td class="time tnum">After</td><td>Real test → rest, then note doubtful questions while fresh. Self-mock → post-mortem 11–12, patch session 4–5 pm.</td></tr>
+    <tr><td class="time tnum">Evening</td><td>FREE.</td></tr>
+    <tr class="recap"><td class="time tnum">10:30 pm</td><td><b>📲 RECAP → MISMATHE</b> (test days = full debrief).</td></tr>
+  </table>
+</div>
+
+<!-- ============ TEST TIMELINE ============ -->
+<h2 class="sec"><span class="bar"></span>The 2-month battle map — every Sunday has a job</h2>
+<div class="card miles">
+  <div class="mile selfm"><div class="d tnum">Sun 12 Jul</div><div class="what"><b>📝 Self-mock — RT-02 dry run</b><span>MISMATHE test on Math Methods (differentiation) + Trig-II + Intro Analytical</span></div></div>
+  <div class="mile real"><div class="d tnum">Sun 19 Jul</div><div class="what"><b>🎯 RT-02 — REAL TEST</b><span>Phys: Math Methods (incl. differential + integral calculus) · Chem: Intro to Analytical · Maths: Trig 1&amp;2</span></div></div>
+  <div class="mile selfm"><div class="d tnum">Sun 26 Jul</div><div class="what"><b>📝 Self-mock — Aug-2 dry run</b><span>Full repeat syllabus incl. U&amp;M + Some Basic Concepts</span></div></div>
+  <div class="mile real"><div class="d tnum">Sun 2 Aug</div><div class="what"><b>🎯 RT-02 (REPEAT) — REAL TEST</b><span>Same + Units &amp; Measurements + Some Basic Concepts — second shot, lock it</span></div></div>
+  <div class="mile selfm"><div class="d tnum">Sun 9 Aug</div><div class="what"><b>📝 Self-mock — RT-03 dry run</b><span>Motion in a Plane + Determinants started, Basic Analytical Tech</span></div></div>
+  <div class="mile real"><div class="d tnum">Sun 16 Aug</div><div class="what"><b>🎯 RT-03 — REAL TEST</b><span>Phys: Motion in a Plane · Chem: Basic Analytical + Structure of Atom pt.1 · Maths: Determinants &amp; Matrices</span></div></div>
+  <div class="mile real"><div class="d tnum">Sun 23 Aug</div><div class="what"><b>🎯 CT-01 — CUMULATIVE REAL TEST</b><span>EVERYTHING so far: 3 Phys ch + 4 Chem ch + Trig 1&amp;2 + D&amp;M. The first boss fight.</span></div></div>
+  <div class="mile real"><div class="d tnum">Sun 30 Aug</div><div class="what"><b>🎯 CT-01 (REPEAT) — REAL TEST</b><span>Cumulative round 2 — this is where the marks get locked</span></div></div>
+  <div class="mile real"><div class="d tnum">Sun 6 Sep</div><div class="what"><b>🎯 RT-04 — REAL TEST · plan ends here</b><span>Phys: Laws of Motion · Chem: Redox + Modern Periodic Table · Maths: Straight Line</span></div></div>
+</div>
+
+<!-- ============ WEEKS ============ -->
+<h2 class="sec"><span class="bar"></span>Week-by-week</h2>
+
+<div class="card wk"><h3>Week 1 — RT-02 runway</h3><div class="dates tnum">Wed 8 → Sun 12 Jul</div>
+  <div class="wk-grid">
+    <div class="wk-s s-phys"><div class="nm">Physics</div><div class="ch">Math Methods — algebra + differential calculus</div></div>
+    <div class="wk-s s-chem"><div class="nm">Chemistry</div><div class="ch">Intro to Analytical Chemistry</div></div>
+    <div class="wk-s s-math"><div class="nm">Maths</div><div class="ch">Trigonometry-II (start)</div></div>
+  </div>
+  <p class="note"><b>⚠️ Calculus alert:</b> RT-02 physics includes differentiation AND integration — the hardest new thing this month. Start it first. Sun 12 = self-mock.</p>
+</div>
+
+<div class="card wk testwk"><h3>Week 2 — RT-02 TEST WEEK 🎯</h3><div class="dates tnum">Mon 13 → Sun 19 Jul</div>
+  <div class="wk-grid">
+    <div class="wk-s s-phys"><div class="nm">Physics</div><div class="ch">Math Methods — integral calculus + mixed drill</div></div>
+    <div class="wk-s s-chem"><div class="nm">Chemistry</div><div class="ch">Intro Analytical — finish + drill</div></div>
+    <div class="wk-s s-math"><div class="nm">Maths</div><div class="ch">Trig-II finish + Trig-I re-sharpen</div></div>
+  </div>
+  <p class="note"><b>Sat 18:</b> formula sheets only, sleep 10:30. <b>Sun 19 = RT-02, 9–12.</b></p>
+</div>
+
+<div class="card wk"><h3>Week 3 — post-mortem + Aug-2 runway</h3><div class="dates tnum">Mon 20 → Sun 26 Jul</div>
+  <div class="wk-grid">
+    <div class="wk-s s-phys"><div class="nm">Physics</div><div class="ch">RT-02 fixes + Units &amp; Measurements revision</div></div>
+    <div class="wk-s s-chem"><div class="nm">Chemistry</div><div class="ch">Some Basic Concepts revision (your 63% chapter, round 2)</div></div>
+    <div class="wk-s s-math"><div class="nm">Maths</div><div class="ch">Trig 1&amp;2 consolidation</div></div>
+  </div>
+  <p class="note">U&amp;M and SBC join the syllabus for 2 Aug. Sun 26 = self-mock of the full repeat syllabus.</p>
+</div>
+
+<div class="card wk testwk"><h3>Week 4 — RT-02 (REPEAT) TEST WEEK 🎯</h3><div class="dates tnum">Mon 27 Jul → Sun 2 Aug</div>
+  <div class="wk-grid">
+    <div class="wk-s s-phys"><div class="nm">Physics</div><div class="ch">U&amp;M + Math Methods — full revision + timed sets</div></div>
+    <div class="wk-s s-chem"><div class="nm">Chemistry</div><div class="ch">SBC + Intro Analytical — full revision + drill</div></div>
+    <div class="wk-s s-math"><div class="nm">Maths</div><div class="ch">Trig 1&amp;2 — timed practice, bank the marks fast</div></div>
+  </div>
+  <p class="note"><b>Sun 2 Aug = RT-02 repeat, 9–12.</b> Second sitting of the same chapters — the lock-in test.</p>
+</div>
+
+<div class="card wk"><h3>Week 5 — RT-03 runway opens</h3><div class="dates tnum">Mon 3 → Sun 9 Aug</div>
+  <div class="wk-grid">
+    <div class="wk-s s-phys"><div class="nm">Physics</div><div class="ch">Motion in a Plane (start) — vectors pay off here</div></div>
+    <div class="wk-s s-chem"><div class="nm">Chemistry</div><div class="ch">Basic Analytical Techniques (short chapter)</div></div>
+    <div class="wk-s s-math"><div class="nm">Maths</div><div class="ch">Determinants &amp; Matrices (start) — the 10-marker</div></div>
+  </div>
+  <p class="note">Sun 9 = self-mock on whatever's covered. RT-02(R) fixes fold into Wednesday.</p>
+</div>
+
+<div class="card wk testwk"><h3>Week 6 — RT-03 TEST WEEK 🎯</h3><div class="dates tnum">Mon 10 → Sun 16 Aug</div>
+  <div class="wk-grid">
+    <div class="wk-s s-phys"><div class="nm">Physics</div><div class="ch">Motion in a Plane — finish + projectile/circular drill</div></div>
+    <div class="wk-s s-chem"><div class="nm">Chemistry</div><div class="ch">Structure of Atom pt.1 — models, EM spectrum, Bohr</div></div>
+    <div class="wk-s s-math"><div class="nm">Maths</div><div class="ch">Determinants &amp; Matrices — finish + drill</div></div>
+  </div>
+  <p class="note"><b>Sun 16 = RT-03, 9–12.</b></p>
+</div>
+
+<div class="card wk testwk"><h3>Week 7 — CT-01 CUMULATIVE WEEK 🎯🔥</h3><div class="dates tnum">Mon 17 → Sun 23 Aug</div>
+  <div class="wk-grid">
+    <div class="wk-s s-phys"><div class="nm">Physics</div><div class="ch">U&amp;M + Math Methods + Motion in a Plane — all revision</div></div>
+    <div class="wk-s s-chem"><div class="nm">Chemistry</div><div class="ch">All 4 chapters — cumulative revision</div></div>
+    <div class="wk-s s-math"><div class="nm">Maths</div><div class="ch">Trig 1&amp;2 + Determinants — cumulative revision</div></div>
+  </div>
+  <p class="note"><b>Sun 23 = CT-01, the first boss fight.</b> Nothing new this week — pure consolidation + timed sets. This is where the spaced-revision habit pays out.</p>
+</div>
+
+<div class="card wk testwk"><h3>Week 8 — CT-01 (REPEAT) WEEK 🎯</h3><div class="dates tnum">Mon 24 → Sun 30 Aug</div>
+  <div class="wk-grid">
+    <div class="wk-s s-phys"><div class="nm">Physics</div><div class="ch">CT-01 fixes — re-drill exactly what leaked</div></div>
+    <div class="wk-s s-chem"><div class="nm">Chemistry</div><div class="ch">CT-01 fixes — weak-spot surgery</div></div>
+    <div class="wk-s s-math"><div class="nm">Maths</div><div class="ch">Timed sets — protect the 90%+ weapon</div></div>
+  </div>
+  <p class="note"><b>Sun 30 = CT-01 repeat.</b> Diagnostic → drill → lock. The two-sitting system at full power.</p>
+</div>
+
+<div class="card wk testwk"><h3>Week 9 — RT-04 sprint (plan ends)</h3><div class="dates tnum">Mon 31 Aug → Sun 6 Sep</div>
+  <div class="wk-grid">
+    <div class="wk-s s-phys"><div class="nm">Physics</div><div class="ch">Laws of Motion (coaching-synced — the #1 priority chapter)</div></div>
+    <div class="wk-s s-chem"><div class="nm">Chemistry</div><div class="ch">Redox Reaction + Modern Periodic Table</div></div>
+    <div class="wk-s s-math"><div class="nm">Maths</div><div class="ch">Straight Line</div></div>
+  </div>
+  <p class="note"><b>Sun 6 Sep = RT-04.</b> Tuition teaches these through August — your blocks follow coaching (sync rule). After this test: month review with MISMATHE + the next 2-month plan, built from 9 weeks of real data.</p>
+</div>
+
+<!-- ============ CONTRACTS ============ -->
+<h2 class="sec"><span class="bar"></span>The two non-negotiables</h2>
+<div class="card contract recap-c">
+  <h3>📲 Daily Recap — 10:30 pm, every night</h3>
+  <ol>
+    <li>Open the tracker, tick what actually happened</li>
+    <li>Hit "Copy tonight's recap" → paste to MISMATHE</li>
+    <li>Add: 3 learnings · 1 confusion · focus + energy /10</li>
+  </ol>
+  <p class="small">I reply with the fix for your confusion + tomorrow's ONE thing. Missed a night? Send next morning — streak survives, silence doesn't.</p>
+</div>
+<div class="card contract">
+  <h3>🏋️ Exercise — 6:15–7:00 am, daily</h3>
+  <ul>
+    <li>Already your habit — the plan just protects it. Before phone, before books.</li>
+    <li>Sick/exhausted? Scale, never cancel: 15-min walk + 10 push-ups + 1-min plank.</li>
+    <li>Real-test Sundays: light session only — save the legs, keep the ritual.</li>
+  </ul>
+</div>
+
+<h2 class="sec"><span class="bar"></span>Ground rules</h2>
+<div class="card">
+  <div class="rules">
+    <div class="rule"><b>Coaching-sync rule</b> Tuition's live topic always wins — next morning's Block 1 follows what they taught, plan adjusts around it.</div>
+    <div class="rule"><b>Two-sitting strategy</b> Test 1 = honest diagnostic (full debrief to MISMATHE) → targeted drills → Test 2 = lock the marks.</div>
+    <div class="rule"><b>Tech nights capped</b> Website/coding time = max 2 night-blocks per week, never on test weeks. Your project is safe; your prep comes first.</div>
+    <div class="rule"><b>Phone protocol</b> Another room during every CORE block. None for 30 min after waking or before sleep.</div>
+    <div class="rule"><b>Sleep floor</b> 11 pm → 6 am, 7 hrs. Sleep is when study becomes memory.</div>
+    <div class="rule"><b>No-shame clause</b> Missed blocks are data, not sins. Report honestly, we re-plan, streak restarts instantly.</div>
+  </div>
+</div>
+
+<p class="foot">"Two months, six real tests, one system. You're not hoping to improve — you're scheduled to." — MISMATHE</p>
+</main>
+
+<script>
+document.getElementById("themeBtn").addEventListener("click",function(){
+  var r=document.documentElement,c=r.getAttribute("data-theme");
+  if(!c){ c=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light"; }
+  r.setAttribute("data-theme",c==="dark"?"light":"dark");
+});
+</script>

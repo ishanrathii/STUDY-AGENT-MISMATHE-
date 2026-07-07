@@ -157,7 +157,7 @@
   <div class="copied" id="copied"></div>
 
   <div class="heat">
-    <h3>Month heatmap — 5 Jul → 5 Aug</h3>
+    <h3>2-month heatmap — 5 Jul → 6 Sep</h3>
     <div class="heat-grid" id="heat"></div>
   </div>
 
@@ -186,16 +186,20 @@ function fmt(k){ var p=fromKey(k); var names=["Sunday","Monday","Tuesday","Wedne
   return {dow:names[dowOf(k)], short:p.d+" "+mo[p.m-1]}; }
 function todayKey(){ var t=istParts(); return key(t.y,t.m,t.d); }
 
-var START="2026-07-05", END="2026-08-05";
+var START="2026-07-05", END="2026-09-06";
 
 /* ---------- week themes ---------- */
 function weekTheme(k){
   if(k<"2026-07-06") return {phys:"—",chem:"—",math:"—",label:"Day 0 · RT-01 test day"};
-  if(k<="2026-07-12") return {phys:"Math Methods — algebra + differential calculus",chem:"Intro to Analytical Chemistry",math:"Trigonometry-II (start)",label:"Week 1 · RT-02 prep (real test 19 Jul)"};
+  if(k<="2026-07-12") return {phys:"Math Methods — algebra + differential calculus",chem:"Intro to Analytical Chemistry",math:"Trigonometry-II (start)",label:"Week 1 · RT-02 runway (test 19 Jul)"};
   if(k<="2026-07-19") return {phys:"Math Methods — integral calculus + drill",chem:"Intro to Analytical (finish + drill)",math:"Trig-II finish + Trig-I sharp",label:"Week 2 · RT-02 TEST WEEK"};
-  if(k<="2026-07-26") return {phys:"RT-02 fixes + Units & Measurements revision",chem:"Some Basic Concepts revision",math:"Trig 1&2 consolidation",label:"Week 3 · Post-mortem + Aug-2 runway"};
-  if(k<="2026-08-02") return {phys:"U&M + Math Methods full revision",chem:"SBC + Intro Analytical full revision",math:"Trig 1&2 full revision",label:"Week 4 · RT-02(R) revision (real test 2 Aug)"};
-  return {phys:"Motion in a Plane (RT-03 begins)",chem:"Basic Analytical Tech + Structure of Atom pt.1",math:"Determinants & Matrices",label:"Week 5 · RT-03 runway (test 16 Aug)"};
+  if(k<="2026-07-26") return {phys:"RT-02 fixes + Units & Measurements revision",chem:"Some Basic Concepts revision",math:"Trig 1&2 consolidation",label:"Week 3 · Aug-2 runway"};
+  if(k<="2026-08-02") return {phys:"U&M + Math Methods full revision",chem:"SBC + Intro Analytical full revision",math:"Trig 1&2 timed sets",label:"Week 4 · RT-02(R) TEST WEEK"};
+  if(k<="2026-08-09") return {phys:"Motion in a Plane (start)",chem:"Basic Analytical Techniques",math:"Determinants & Matrices (start)",label:"Week 5 · RT-03 runway opens"};
+  if(k<="2026-08-16") return {phys:"Motion in a Plane (finish + drill)",chem:"Structure of Atom pt.1 — models, EM spectrum, Bohr",math:"Determinants & Matrices (finish)",label:"Week 6 · RT-03 TEST WEEK"};
+  if(k<="2026-08-23") return {phys:"CUMULATIVE: U&M + MM + Motion in a Plane",chem:"CUMULATIVE: all 4 chapters",math:"CUMULATIVE: Trig 1&2 + D&M",label:"Week 7 · CT-01 TEST WEEK 🔥"};
+  if(k<="2026-08-30") return {phys:"CT-01 fixes — re-drill the leaks",chem:"CT-01 fixes — weak-spot surgery",math:"Timed sets — protect the weapon",label:"Week 8 · CT-01(R) TEST WEEK"};
+  return {phys:"Laws of Motion (coaching-synced)",chem:"Redox + Modern Periodic Table",math:"Straight Line",label:"Week 9 · RT-04 sprint (test 6 Sep)"};
 }
 function dayFocus(k,th){
   var dw=dowOf(k);
@@ -206,62 +210,59 @@ function dayFocus(k,th){
 }
 
 /* ---------- task generation ---------- */
+var REAL_TESTS={
+  "2026-07-19":{nm:"RT-02",sy:"Phys: Math Methods · Chem: Intro Analytical · Maths: Trig 1&2"},
+  "2026-08-02":{nm:"RT-02 (REPEAT)",sy:"adds Units & Measurements + Some Basic Concepts"},
+  "2026-08-16":{nm:"RT-03",sy:"Motion in a Plane · Basic Analytical + Structure of Atom pt.1 · Determinants & Matrices"},
+  "2026-08-23":{nm:"CT-01 (CUMULATIVE)",sy:"everything covered so far — all three subjects"},
+  "2026-08-30":{nm:"CT-01 (REPEAT)",sy:"cumulative round 2 — lock the marks"},
+  "2026-09-06":{nm:"RT-04",sy:"Laws of Motion · Redox + Modern Periodic Table · Straight Line"}
+};
 function tasksFor(k){
   var dw=dowOf(k), th=weekTheme(k), f=dayFocus(k,th), T=[];
   function t(id,nm,tm,wt,cls){ T.push({id:id,nm:nm,tm:tm,wt:wt,cls:cls}); }
-  t("ex","🏋️ Exercise (30+ min)","7:15 – 7:55 am",3,"unc");
+  t("ex","🏋️ Exercise (30+ min)","6:15 – 7:00 am",3,"unc");
   if(k==="2026-07-05"){
-    t("test","🎯 Tuition test (9–12) — DONE, it's behind you","9:00 – 12:00",3,"core");
+    t("test","🎯 RT-01 test (9–12) — DONE, it's behind you","9:00 – 12:00",3,"core");
     t("rest","😌 Real rest — food, nap, something fun","afternoon",1,"flex");
-    t("recap","📲 TEST DEBRIEF recap → MISMATHE","9:45 pm",3,"recap");
+    t("recap","📲 TEST DEBRIEF recap → MISMATHE","10:30 pm",3,"recap");
     return T;
   }
-  if(k==="2026-07-19"){
-    t("test","🎯 RT-02 REAL TEST @ Vedantu — Phys MM · Chem IAC · Trig 1&2","9:00 – 12:00",3,"core");
+  if(REAL_TESTS[k]){
+    var rt=REAL_TESTS[k];
+    t("test","🎯 "+rt.nm+" REAL TEST @ Vedantu — "+rt.sy,"9:00 – 12:00",3,"core");
     t("rest","😌 Post-test rest + food","afternoon",1,"flex");
     t("note","🔍 Note doubtful questions while memory is fresh","evening",2,"core");
-    t("recap","📲 TEST DEBRIEF recap → MISMATHE","9:45 pm",3,"recap");
+    t("recap","📲 TEST DEBRIEF recap → MISMATHE","10:30 pm",3,"recap");
     return T;
   }
-  if(k==="2026-08-02"){
-    t("test","🎯 RT-02 (REPEAT) REAL TEST @ Vedantu — adds U&M + Some Basic Concepts","9:00 – 12:00",3,"core");
-    t("rest","😌 Post-test rest","afternoon",1,"flex");
-    t("note","🔍 Note doubtful questions while memory is fresh","evening",2,"core");
-    t("recap","📲 TEST DEBRIEF recap → MISMATHE","9:45 pm",3,"recap");
-    return T;
-  }
-  if(k==="2026-08-05"){
-    t("rev","📊 Month review with MISMATHE + August plan","10:00 – 11:30",3,"core");
-    t("recap","📲 Recap → MISMATHE","9:45 pm",3,"recap");
-    return T;
-  }
-  if(dw===0){ // Sunday
+  if(dw===0){ // free Sunday = self-mock
     t("mock","📝 Self-mock 9 AM — dry run of the next real test","9:00 – 10:45",3,"core");
     t("post","🔍 Post-mortem: tag concept/formula/silly","11:00 – 12:00",2,"core");
-    t("patch","🩹 Patch session on what mock exposed","2:30 – 3:30",1,"flex");
+    t("patch","🩹 Patch session on what the mock exposed","4:00 – 5:00",1,"flex");
   } else if(dw===3){ // Wednesday
-    t("backlog","🧹 Backlog block (starred doubts, unfinished)","9:30 – 11:00",2,"core");
-    t("drill","🎯 Weak-area drill (Chem/Phys bias)","11:15 – 12:15",2,"core");
-    t("weekrev","📚 Full-week revision (3 formula sheets)","2:30 – 4:00",2,"core");
-  } else { // coaching day
+    t("backlog","🧹 Backlog block (starred doubts, unfinished)","8:15 – 9:45",2,"core");
+    t("drill","🎯 Weak-area drill (Chem/Phys bias)","10:00 – 11:15",2,"core");
+    t("weekrev","📚 Full-week revision (formula sheets + starred Qs)","12:30 – 1:45",2,"core");
+  } else { // tuition day
     var fl=f?(" — "+f.sub+": "+f.ch):"";
-    t("b1","📘 Deep Block 1"+fl,"9:30 – 11:00",3,"core");
-    t("b2","✍️ Block 2 — 20-25 practice MCQs","11:15 – 12:15",2,"core");
-    t("b3","🔁 Block 3 — maths keep-sharp + revision","2:30 – 3:20",1,"flex");
-    t("ved","🏫 Vedantu coaching","4:00 – 7:30",2,"core");
-    t("b4","📖 Block 4 — re-solve coaching examples","9:00 – 9:45",2,"core");
+    t("recall","🧠 10-min recall of last night's block","8:05 – 8:15",1,"core");
+    t("b1","📘 Deep Block 1"+fl,"8:15 – 9:45",3,"core");
+    t("b2","✍️ Block 2 — 20-25 practice MCQs","10:00 – 11:15",2,"core");
+    t("b3","🔁 Block 3 — maths keep-sharp sprint","11:30 – 12:00",1,"flex");
+    t("b4","📖 Block 4 — spaced revision (yesterday + 3 days ago)","12:30 – 1:45",2,"core");
+    t("ved","🏫 Tuition (travel + classes)","2:00 – 8:45",2,"core");
+    t("b5","🌙 Night block — coaching recap (or tech-night, max 2×/wk)","9:30 – 10:30",1,"flex");
   }
-  t("recap","📲 Daily recap → MISMATHE (5 lines)","9:45 pm",3,"recap");
+  t("recap","📲 Daily recap → MISMATHE (5 lines)","10:30 pm",3,"recap");
   return T;
 }
 function specialBanner(k){
   if(k==="2026-07-05") return {txt:"🎯 DAY 0 — RT-01 was this morning. Tonight's recap = the full debrief.",sp:true};
-  if(k==="2026-07-19") return {txt:"🎯 RT-02 REAL TEST TODAY 9–12 @ Vedantu — Phys: Math Methods · Chem: Intro Analytical · Maths: Trig 1&2. You trained for this.",sp:true};
-  if(k==="2026-08-02") return {txt:"🎯 RT-02 (REPEAT) REAL TEST TODAY 9–12 — same syllabus + Units & Measurements + Some Basic Concepts. Second shot: lock it.",sp:true};
-  if(k==="2026-08-05") return {txt:"📊 Month review day — we grade the month and build August from real data.",sp:true};
+  if(REAL_TESTS[k]) return {txt:"🎯 "+REAL_TESTS[k].nm+" REAL TEST TODAY 9–12 @ Vedantu — "+REAL_TESTS[k].sy+". You trained for this.",sp:true};
   var dw=dowOf(k), th=weekTheme(k);
-  if(dw===0) return {txt:"📝 Mock Sunday · "+th.label+" — evening is FREE after the patch session.",sp:false};
-  if(dw===3) return {txt:"🧹 Revision Wednesday · "+th.label+" — no new content today. Evening FREE.",sp:false};
+  if(dw===0) return {txt:"📝 Self-mock Sunday · "+th.label+" — 9 AM dry run, evening FREE.",sp:false};
+  if(dw===3) return {txt:"🧹 Revision Wednesday · "+th.label+" — no new content. Afternoon + evening FREE.",sp:false};
   var f=dayFocus(k,th);
   return {txt:th.label+" · Focus: "+(f?f.sub+" — "+f.ch:""),sp:false};
 }
